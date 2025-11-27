@@ -1,0 +1,678 @@
+{
+  "intents": [
+    {
+      "tag": "introduce_self",
+      "examples": [
+        "my name is",
+        "i am",
+        "i'm",
+        "call me",
+        "you can call me",
+        "this is",
+        "it is",
+        "it's",
+        "hey, I'm",
+        "hi, my name is",
+        "you can just call me",
+        "people call me",
+        "i go by",
+        "i prefer to be called",
+        "let's say my name is",
+        "you may call me"
+      ]
+    },
+    {
+      "tag": "name_refuse",
+      "examples": [
+        "no",
+        "I don't want to provide my name",
+        "I'd rather not give my name",
+        "I prefer to stay anonymous",
+        "I don't want to tell you my name",
+        "I'd like to keep my name private",
+        "I won't share my name",
+        "I don't feel comfortable giving my name"
+      ]
+    },
+    {
+      "tag": "recall_name",
+      "examples": [
+        "what is my name",
+        "do you remember my name",
+        "what do you call me",
+        "tell me my name",
+        "who am i",
+        "what did I tell you my name was",
+        "what name did I give you",
+        "how do you remember my name",
+        "do you still remember my name",
+        "what did I say my name is"
+      ]
+    },
+    {
+      "tag": "greet",
+      "examples": [
+        "hi",
+        "hello",
+        "hey",
+        "good morning",
+        "good evening",
+        "good afternoon",
+        "hi there",
+        "hey there",
+        "yo",
+        "hi bot",
+        "hello there",
+        "hiya",
+        "hey, how's it going",
+        "hey, bot",
+        "hi again"
+      ]
+    },
+    {
+      "tag": "discover",
+      "examples": [
+        "what can you do",
+        "help",
+        "what are your functions",
+        "show me options",
+        "what do you know",
+        "how can you help me",
+        "what are you able to do",
+        "what can you help me with",
+        "tell me what you can do",
+        "explain your features",
+        "what kind of things can you do",
+        "what are you good at"
+      ]
+    },
+    {
+      "tag": "small_talk",
+      "examples": [
+        "how are you",
+        "how are you today",
+        "how you doing",
+        "how are you doing",
+        "are you okay",
+        "are you okay today",
+        "how are you feeling",
+        "how do you feel",
+        "how is it going",
+        "how's everything",
+        "how have you been",
+        "is everything alright",
+        "how are things",
+        "how do you do",
+        "how's your day",
+        "how's your day going",
+        "you alright",
+        "you doing okay",
+        "are you doing well"
+      ]
+    },
+    {
+      "tag": "user_feeling_positive",
+      "examples": [
+        "i am fine",
+        "i'm fine",
+        "i am good",
+        "i'm good",
+        "i'm okay",
+        "i am okay",
+        "doing good",
+        "doing well",
+        "i'm alright",
+        "i am alright",
+        "not bad",
+        "pretty good",
+        "all good",
+        "i feel great",
+        "feeling fine",
+        "i'm feeling good",
+        "i'm doing great",
+        "i'm excellent",
+        "everything is good",
+        "can't complain"
+      ]
+    },
+    {
+      "tag": "user_feeling_negative",
+      "examples": [
+        "I don't feel good",
+        "feeling bad",
+        "i'm bad",
+        "i'm tired",
+        "i'm not so good",
+        "i am not okay",
+        "i'm feeling down",
+        "i feel awful",
+        "i'm not great",
+        "i've been better",
+        "not doing so well",
+        "feeling a bit low",
+        "i'm a bit down",
+        "i'm stressed",
+        "i'm not okay today"
+      ]
+    },
+    {
+      "tag": "quit",
+      "examples": [
+        "exit",
+        "quit",
+        "bye",
+        "goodbye",
+        "see you later",
+        "i'm done",
+        "that's all",
+        "thanks, bye",
+        "talk to you later",
+        "i have to go",
+        "i'm leaving now"
+      ]
+    },
+    {
+      "tag": "games_list",
+      "examples": [
+        "what games do you have",
+        "show me some games",
+        "list some games",
+        "what games are available",
+        "can you show me your games",
+        "what games are in your list",
+        "show me your game collection",
+        "what games are in stock",
+        "what games can I choose from",
+        "give me a list of games",
+        "suggest me some games",
+        "what games do you offer"
+      ]
+    },
+    {
+      "tag": "games_list_by_name",
+      "examples": [
+        "do you have",
+        "have you got",
+        "can you find",
+        "do you sell",
+        "can I buy",
+        "is there",
+        "show me",
+        "find me",
+        "I'm looking for",
+        "search for",
+        "do you carry",
+        "do you stock",
+        "can you get",
+        "do you offer",
+        "I'm interested in",
+        "I'd like to get",
+        "can I see",
+        "is available",
+        "do you have the game",
+        "can you check if you have",
+        "do you have a copy of",
+        "do you have any version of",
+        "could you look up",
+        "can you see if you sell"
+      ]
+    },
+    {
+      "tag": "games_search_by_platform",
+      "examples": [
+        "show me games for pc",
+        "show me games for ps",
+        "show me games for x",
+        "show me games for xbox",
+        "do you have any pc games",
+        "do you have any ps games",
+        "do you have any x games",
+        "do you have any xbox games",
+        "list games for pc",
+        "list games for ps",
+        "list games for x",
+        "list games for xbox",
+        "what playstation games do you have",
+        "any games for playstation",
+        "any games for ps4",
+        "any games for ps5",
+        "what xbox games do you have",
+        "what pc games are available",
+        "show me console games",
+        "show me playstation games",
+        "show me xbox games",
+        "show me pc games"
+      ]
+    },
+    {
+      "tag": "games_search_by_genre",
+      "examples": [
+        "show me action games",
+        "list action games",
+        "find action games",
+        "do you have any action games",
+
+        "show me adventure games",
+        "list adventure games",
+        "find adventure games",
+        "do you have any adventure games",
+
+        "show me horror games",
+        "list horror games",
+        "find horror games",
+        "do you have any horror games",
+
+        "show me shooter games",
+        "list shooter games",
+        "find shooter games",
+        "do you have any shooter games",
+
+        "show me simulation games",
+        "list simulation games",
+        "find simulation games",
+        "do you have any simulation games",
+
+        "show me strategy games",
+        "list strategy games",
+        "find strategy games",
+        "do you have any strategy games",
+
+        "show me sports games",
+        "list sports games",
+        "find sports games",
+        "do you have any sports games",
+
+        "show me racing games",
+        "list racing games",
+        "find racing games",
+        "do you have any racing games",
+
+        "show me fighting games",
+        "list fighting games",
+        "find fighting games",
+        "do you have any fighting games",
+
+        "show me role-playing games",
+        "list role-playing games",
+        "find role-playing games",
+        "do you have any role-playing games",
+
+        "show me RPG games",
+        "list RPG games",
+        "find RPG games",
+        "do you have any RPG games",
+
+        "show me puzzle games",
+        "list puzzle games",
+        "find puzzle games",
+        "do you have any puzzle games",
+
+        "i want horror games",
+        "i'm looking for sports games",
+        "do you have any good racing games",
+        "can you show me some shooters",
+        "any nice adventure games",
+        "i want some story-rich games"
+      ]
+    },
+    {
+      "tag": "games_by_publisher",
+      "examples": [
+        "list games published by",
+        "show me games published by",
+        "what games are from publisher",
+        "games from publisher",
+        "do you have any games published by",
+        "show titles from publisher",
+        "which games are published by"
+      ]
+    },
+    {
+      "tag": "games_by_developer",
+      "examples": [
+        "list games developed by",
+        "show me games developed by",
+        "what games are made by",
+        "games from developer",
+        "do you have any games developed by",
+        "show titles from developer",
+        "which games are developed by"
+      ]
+    },
+    {
+      "tag": "games_search_by_price_low",
+      "examples": [
+        "do you have games under pounds",
+        "show me games under pounds",
+        "find games under pounds",
+        "what games are under pounds",
+        "games cheaper than pounds",
+        "games below pounds",
+        "I want games under pounds",
+        "any games under pounds",
+        "list games under pounds",
+        "show cheap games under pounds",
+        "what can I buy under pounds",
+        "games less than pounds"
+      ]
+    },
+    {
+      "tag": "games_search_by_price_high",
+      "examples": [
+        "do you have games over pounds",
+        "show me games over pounds",
+        "find games over pounds",
+        "games above pounds",
+        "games more than pounds",
+        "list expensive games over pounds",
+        "any games above pounds",
+        "I want games more than pounds",
+        "what games are over pounds",
+        "can you show games over pounds",
+        "show games costing more than pounds",
+        "games more than pounds"
+      ]
+    },
+    {
+      "tag": "games_search_by_price_exact",
+      "examples": [
+        "do you have games costs pounds",
+        "show me games costs pounds",
+        "find games for pounds",
+        "games that cost pounds",
+        "games priced at pounds",
+        "list games for pounds",
+        "any games for pounds",
+        "I want games that cost pounds",
+        "what games are priced at pounds",
+        "can you show games for pounds",
+        "show games costing pounds",
+        "show games costs around pounds",
+        "find games costs around pounds",
+        "around pounds",
+        "games for exactly pounds",
+        "what can I get for pounds"
+      ]
+    },
+    {
+      "tag": "games_search_by_price_between",
+      "examples": [
+        "do you have games cost between pounds",
+        "show me games between",
+        "find games between",
+        "list games between",
+        "games between",
+        "games priced between",
+        "games that cost between",
+        "show games costing between",
+        "any games between",
+        "I want games between",
+        "can you show games between",
+        "what games are priced between",
+        "find games that are between",
+        "list games that cost between",
+        "games available between",
+        "i'm looking for games in the range",
+        "games in the price range between"
+      ]
+    },
+    {
+      "tag": "games_search_by_critic_low",
+      "examples": [
+        "do you have games with critic score under ",
+        "show me games with critic score below",
+        "list games under rating",
+        "find games with score less than",
+        "games with low critic score under",
+        "show low-rated games under",
+        "games with poor reviews below",
+        "games with rating lower than"
+      ]
+    },
+    {
+      "tag": "games_search_by_critic_high",
+      "examples": [
+        "do you have games with critic score over ",
+        "show me games with critic score above",
+        "list games over rating",
+        "find games with score higher than",
+        "games with high critic score over",
+        "show highly-rated games",
+        "games with great reviews above",
+        "games with rating higher than"
+      ]
+    },
+    {
+      "tag": "games_search_by_critic_exact",
+      "examples": [
+        "do you have games with critic score ",
+        "show me games with critic score",
+        "games rated",
+        "list games with score exactly",
+        "find games with rating",
+        "games with exact rating of",
+        "games rated exactly",
+        "games that have rating"
+      ]
+    },
+    {
+      "tag": "games_search_by_critic_between",
+      "examples": [
+        "do you have games with critic score between and ",
+        "show me games with critic score between and",
+        "games rated from to",
+        "list games with score between and",
+        "find games rated between and",
+        "games with rating between and",
+        "games with reviews from to",
+        "titles with score between and"
+      ]
+    },
+    {
+      "tag": "games_search_by_release_before",
+      "examples": [
+        "do you have games released before",
+        "do you have games published before",
+        "show me games before",
+        "list games released before",
+        "what games came out before",
+        "show old games released before",
+        "I want to see games from before",
+        "games earlier than",
+        "older games before",
+        "find titles released before",
+        "can you show me all games before",
+        "display games launched before",
+        "which games were released before",
+        "games that came out before",
+        "show me older games than",
+        "games released earlier than"
+      ]
+    },
+    {
+      "tag": "games_search_by_release_after",
+      "examples": [
+        "do you have games released after",
+        "do you have games published after",
+        "show me games after",
+        "list games released after",
+        "what games came out after",
+        "show old games released after",
+        "I want to see games from after",
+        "games later than",
+        "older games after",
+        "find titles released after",
+        "can you show me all games after",
+        "display games launched after",
+        "which games were released after",
+        "games that came out after",
+        "show me newer games than",
+        "games released later than"
+      ]
+    },
+    {
+      "tag": "games_search_by_release_exact",
+      "examples": [
+        "do you have games released in",
+        "do you have games published in",
+        "show me games released in",
+        "list games released in",
+        "what games came out in",
+        "find titles released in",
+        "can you show me all games released in",
+        "display games launched in",
+        "which games were released in",
+        "games that came out in",
+        "games from the year",
+        "games released during"
+      ]
+    },
+    {
+      "tag": "games_search_by_release_between",
+      "examples": [
+        "do you have games released in between and",
+        "do you have games published between and",
+        "show me games released between",
+        "list games released between",
+        "what games came out between",
+        "I want to see games from to to",
+        "find titles released between",
+        "can you show me all games released between",
+        "display games launched between",
+        "which games were released between",
+        "games that came out between",
+        "games from between and",
+        "titles released between and"
+      ]
+    },
+    {
+      "tag": "games_mode_on",
+      "examples": [
+        "i want to buy some games",
+        "let's talk about games",
+        "i want to browse games",
+        "i want to buy a game",
+        "show me some games to buy",
+        "i would like to look at games",
+        "take me to games mode",
+        "can we talk about games",
+        "let's go to game shop",
+        "i want to see your game store",
+        "i'd like to check your games"
+      ]
+    },
+    {
+      "tag": "buy_process",
+      "examples": [
+        "i want to buy",
+        "let me buy",
+        "i am buying",
+        "can I purchase",
+        "i want to purchase",
+        "i'd like to buy game",
+        "i want to buy that one",
+        "i'm ready to buy",
+        "can we buy this game",
+        "let's buy this"
+      ]
+    },
+    {
+      "tag": "confirm_order_positive",
+      "examples": [
+        "confirm my order",
+        "yes",
+        "yeah",
+        "yep",
+        "sure",
+        "ok confirm",
+        "go ahead",
+        "yes please",
+        "that sounds good",
+        "i confirm",
+        "let's do it",
+        "okay buy it"
+      ]
+    },
+    {
+      "tag": "confirm_order_negative",
+      "examples": [
+        "no",
+        "nah",
+        "nope",
+        "actually no",
+        "i changed my mind",
+        "don't confirm",
+        "cancel this",
+        "forget it",
+        "i don't want it",
+        "leave it"
+      ]
+    },
+    {
+      "tag": "game_selection",
+      "examples": [
+        "I choose ",
+        "I choose number ",
+        "option ",
+        "I'll go with ",
+        "pick ",
+        "take number ",
+        "choose ",
+        "I'd like option ",
+        "let's go with number ",
+        "select ",
+        "i pick number ",
+        "number ",
+        "i want option ",
+        "i'll take "
+      ]
+    },
+    {
+      "tag": "purchase_history",
+      "examples": [
+        "what did I bought",
+        "what did I buy",
+        "what games have I purchased",
+        "show my purchase history",
+        "what did I order",
+        "what game did we buy",
+        "remind me what I bought",
+        "what was my last purchase"
+      ]
+    },
+    {
+      "tag": "dont_want_games",
+      "examples": [
+        "I don't want to buy a game",
+        "I don't want games",
+        "I don't want to buy any game",
+        "no games",
+        "stop the games",
+        "I changed my mind about games",
+        "let's stop talking about games",
+        "I don't want to browse games anymore",
+        "take me out of game mode",
+        "I'm done with games",
+        "I don't want to see games now",
+        "no more games please",
+        "leave the games section",
+        "go back from games"
+      ]
+    },
+    {
+      "tag": "back",
+      "examples": [
+        "back",
+        "changed my mind",
+        "go back",
+        "take me back",
+        "i want to go back",
+        "previous step",
+        "return to previous",
+        "back one step",
+        "let's go back one step",
+        "undo that choice"
+      ]
+    }
+  ]
+}
