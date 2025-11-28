@@ -37,10 +37,9 @@ def main() -> None:
         print(ask_name())
 
     while True:
-        # Decide which name to show in the prompt:
+        # Decides which name to show in the prompt:
         # 1) saved name from storage
-        # 2) name in config (if set)
-        # 3) fallback to generic "You"
+        # 2) fallback to generic "You"
         display_name =  user_name.value
         
         user_input = input(f"{display_name}: ").strip()

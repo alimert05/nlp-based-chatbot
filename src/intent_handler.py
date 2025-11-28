@@ -82,10 +82,10 @@ class IntentHandler:
         self.decision = load_name_decision()
         self.username = load_name()
         self.name_given = True if self.decision is True else False
-        self.name_giving_refused = False
 
     def _reset_buying_state(self):
         """Reset all game-purchase-related state."""
+        self.buying_process = False
         self.choose_game_name_mode = False
         self.choose_platform_mode = False
         self.current_platforms = []
@@ -255,7 +255,7 @@ class IntentHandler:
     # Game Mode Entry / Checks
     def _can_use_game_features(self) -> bool:
         """Check if user can use game features (name given or explicitly refused)."""
-        return self.name_given or self.name_giving_refused
+        return self.name_given
 
     def _should_activate_game_mode(self, label: str) -> bool:
         """Check if we should activate game mode"""
@@ -284,9 +284,6 @@ class IntentHandler:
         # 1. User wants to leave game mode
         if label == "dont_want_games":
             self.game_mode = False
-            self.buying_process = False
-            self.only_one_game = False
-            self.only_one_platform = False
             self._reset_buying_state()
             return user_ends_game_mode()
 
@@ -372,7 +369,6 @@ class IntentHandler:
         # 1. At game selection stage
         if self.choose_game_name_mode:
             self._reset_buying_state()
-            self.buying_process = False
             return back_from_game_selection()
 
         # 2. At platform selection stage
@@ -394,7 +390,6 @@ class IntentHandler:
         # Case: only one game & only one platform → just cancel
         if self.only_one_game and self.only_one_platform:
             self._reset_buying_state()
-            self.buying_process = False
             return back_from_game_selection()
 
         # Case: only one platform (but multiple games) → go back to game list
@@ -653,8 +648,8 @@ class IntentHandler:
         """Handle all non-game mode intents"""
 
         # User refuses to give name
-        if label == "name_refuse" and self.name_giving_refused is False:
-            self.name_giving_refused = True
+        if label == "name_refuse":
+            self.name_given = False
             return name_refused()
 
         # Discover capabilities
