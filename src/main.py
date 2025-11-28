@@ -3,7 +3,14 @@ from responses import (fallback, goodbye_saved_name,
                        goodbye_no_saved_name, ask_name, 
                        greeting_again, goodbye_only)
 from storage import load_name_decision, load_name
-import config
+
+class UserNameProxy:
+    """Helper that always returns the best-known user name."""
+    @property
+    def value(self):
+        return load_name() or "You"
+
+user_name = UserNameProxy()
 
 
 def main() -> None:
@@ -34,8 +41,7 @@ def main() -> None:
         # 1) saved name from storage
         # 2) name in config (if set)
         # 3) fallback to generic "You"
-        saved_name = load_name()
-        display_name =  saved_name or config.USER_NAME or "You"
+        display_name =  user_name.value
         
         user_input = input(f"{display_name}: ").strip()
         response = intent_handler.handle_intent(user_input)

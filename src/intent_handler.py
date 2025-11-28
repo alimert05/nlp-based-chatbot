@@ -59,7 +59,7 @@ class IntentHandler:
 
         # Game mode & purchased flow
         self.game_mode = False
-        self.choose_name_mode = False # choosing which game
+        self.choose_game_name_mode = False # choosing which game
         self.choose_platform_mode = False # choosing which platform
         self.buying_process = False
         self.goodbye_process = False
@@ -80,12 +80,13 @@ class IntentHandler:
 
         # Name decision handling (persistent)
         self.decision = load_name_decision()
+        self.username = load_name()
         self.name_given = True if self.decision is True else False
         self.name_giving_refused = False
 
     def _reset_buying_state(self):
         """Reset all game-purchase-related state."""
-        self.choose_name_mode = False
+        self.choose_game_name_mode = False
         self.choose_platform_mode = False
         self.current_platforms = []
         self.current_prices = []
@@ -193,8 +194,8 @@ class IntentHandler:
             if extracted_name:
                 self.name_given = True
                 self.change_name = False
-                config.USER_NAME = extracted_name
                 save_name(extracted_name)
+                self.username = extracted_name
 
                 # If we were in "change name" mode, this is a new name
                 if self.new_name_given:
@@ -204,7 +205,7 @@ class IntentHandler:
             return ask_name_again()
         
         # Case 2: name already known previously
-        if extracted_name.lower() == str(config.USER_NAME).lower():
+        if extracted_name.lower() == str(self.username).lower():
             return name_already_known()
         self.change_name = True
         return name_already_given()
@@ -294,7 +295,7 @@ class IntentHandler:
             return self._handle_back_in_buy_process()
         
         # 3. Selection steps (game/platform choice)
-        if self.choose_name_mode or self.choose_platform_mode:
+        if self.choose_game_name_mode or self.choose_platform_mode:
             return self._handle_selection_process(user_input)
         
         # Help within game mode
@@ -307,7 +308,7 @@ class IntentHandler:
             return filter_response
         
         # 6. Starting buy process
-        if label == "buy_process" and not self.buying_process:
+        if label == "start_buying_process" and not self.buying_process:
             (titles, platforms, _, _, _,
             _, _, prices) = self.games_engine.search_by_title(self.game_query)
             return self._handle_buy_process(titles, platforms, prices)
@@ -324,7 +325,7 @@ class IntentHandler:
         selected_id = detect_selection(user_input)
 
         # Choose game by number
-        if self.choose_name_mode:
+        if self.choose_game_name_mode:
             if selected_id is None or not (1 <= selected_id <= len(self.buy_candidates)):
                 return f"Bot: Please reply with a number between 1 and {len(self.buy_candidates)}."
 
@@ -332,7 +333,7 @@ class IntentHandler:
             title = selected["title"]
             platforms = selected["platforms"]
             prices = selected["prices"]
-            self.choose_name_mode = False
+            self.choose_game_name_mode = False
             self.current_platforms = platforms
             self.current_prices = prices
             self.selected_game_title = title
@@ -369,7 +370,7 @@ class IntentHandler:
     def _handle_back_in_buy_process(self):
         """Handle 'back' command at different stages of the buy process."""
         # 1. At game selection stage
-        if self.choose_name_mode:
+        if self.choose_game_name_mode:
             self._reset_buying_state()
             self.buying_process = False
             return back_from_game_selection()
@@ -378,7 +379,7 @@ class IntentHandler:
         if self.choose_platform_mode:
             # Go back to choosing the game
             self.choose_platform_mode = False
-            self.choose_name_mode = True
+            self.choose_game_name_mode = True
 
             self.selected_game_title = None
             self.current_platforms = []
@@ -398,7 +399,7 @@ class IntentHandler:
 
         # Case: only one platform (but multiple games) → go back to game list
         if self.only_one_platform:
-            self.choose_name_mode = True
+            self.choose_game_name_mode = True
             self.selected_game_title = None
             self.current_platform_choice = None
             self.current_price_choice = None
@@ -596,7 +597,7 @@ class IntentHandler:
             prices_list = selected["prices"]
 
             self.current_platforms = platforms_list
-            self.current_prices = prices_list      # <-- store prices for later
+            self.current_prices = prices_list      # store prices for later
             self.selected_game_title = title
 
             if len(platforms_list) == 1:
@@ -607,7 +608,7 @@ class IntentHandler:
                 return ask_platform_disambiguation(title, platforms_list, prices_list)
 
         # Multiple games found
-        self.choose_name_mode = True
+        self.choose_game_name_mode = True
         self.choose_platform_mode = True
         self.buy_candidates = candidates
         return ask_game_disambiguation(candidates)
@@ -671,8 +672,7 @@ class IntentHandler:
         # Recall name
         if label == "recall_name":
             if self.name_given:
-                saved = load_name()
-                return recall_name(saved)
+                return recall_name(self.username)
             else:
                 return no_name_to_recall()
         

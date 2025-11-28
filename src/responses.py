@@ -2,14 +2,14 @@ from typing import Optional, List
 import random
 from collections import defaultdict
 from storage import load_name, save_purchased_game
-import config
+
 
 
 class UserNameProxy:
     """Helper that always returns the best-known user name."""
     @property
     def value(self):
-        return config.USER_NAME or load_name() or "user"
+        return load_name() or "user"
 
 user_name = UserNameProxy()
 
@@ -77,9 +77,10 @@ def user_feeling_positive() -> str:
 
 def user_feeling_negative() -> str:
     return f"Bot: I am sorry to hear that, {user_name.value}. I hope things get better soon."
-    
+
+# Some questions have multiple answers, so it returns random answers from answer list
 def qa_answers(answer_list: List[str]) -> str:
-    return f"Bot: {' '.join(answer_list)}"
+    return f"Bot: {random.choice(answer_list)}"
 
 def goodbye_saved_name() -> str:
     return f"Bot: I've saved your name for future sessions. Goodbye, {user_name.value} - hope to see you soon."

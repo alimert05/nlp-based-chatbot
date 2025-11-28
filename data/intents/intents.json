@@ -562,7 +562,7 @@
       ]
     },
     {
-      "tag": "buy_process",
+      "tag": "start_buying_process",
       "examples": [
         "i want to buy",
         "let me buy",
@@ -606,25 +606,6 @@
         "forget it",
         "i don't want it",
         "leave it"
-      ]
-    },
-    {
-      "tag": "game_selection",
-      "examples": [
-        "I choose ",
-        "I choose number ",
-        "option ",
-        "I'll go with ",
-        "pick ",
-        "take number ",
-        "choose ",
-        "I'd like option ",
-        "let's go with number ",
-        "select ",
-        "i pick number ",
-        "number ",
-        "i want option ",
-        "i'll take "
       ]
     },
     {
@@ -672,6 +653,15 @@
         "back one step",
         "let's go back one step",
         "undo that choice"
+      ]
+    },
+    {
+      "tag": "change_name",
+      "examples": [
+        "I want to change my name",
+        "may I change my name",
+        "can I change my name",
+        "let me change my name"
       ]
     }
   ]

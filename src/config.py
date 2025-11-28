@@ -55,7 +55,5 @@ GENRE_ALIASES = {
     "Puzzle": ["puzzle", "brain", "logic"]
 }
 
-# Global runtime variable
-USER_NAME: str = None
 
 
