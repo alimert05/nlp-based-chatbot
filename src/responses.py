@@ -21,6 +21,9 @@ def ask_name() -> str:
 def name_already_given() -> str:
     return f"Bot: You have already gave your name {user_name.value}. Would you like to change it?"
 
+def confirm_name_change(new_name: str) -> str:
+    return f"Bot: Do you confirm your new name: {new_name}? (yes/no)"
+
 def greeting(name: Optional[str]) -> str:
     if name:
         return f"Bot: Hi {name}! Nice to meet you. How can I help you today?"
@@ -41,10 +44,14 @@ def name_already_known() -> str:
 def name_changed() -> str:
     return f"Bot: Great, I've successfully changed your name to {user_name.value}. How can I help you today?"
 
-def recall_name(name: Optional[str]) -> str:
-    if name:
-        return f"Bot: Your name is {name}"
-    return "Bot: Sorry, I don't know your name yet. Please introduce yourself."
+def recall_name() -> str:
+    return f"Bot: Your name is {user_name.value}"
+
+def name_removed() -> str:
+    return "Bot: I've successfully removed your name."
+
+def no_name_to_remove() -> str:
+    return "Bot: I can't remove your name because you haven't provide your name yet"
 
 def no_name_to_recall() -> str:
     return "Bot: Sorry, you haven't provided your name yet."
@@ -86,7 +93,7 @@ def goodbye_saved_name() -> str:
     return f"Bot: I've saved your name for future sessions. Goodbye, {user_name.value} - hope to see you soon."
 
 def goodbye_no_saved_name() -> str:
-    return f"Bot: I've deleted your name. Goodbye, {user_name.value} -  hope to see you again."
+    return f"Bot: I've deleted your name. Goodbye {user_name.value}, hope to see you again."
 
 def goodbye_only() -> str:
     return "Bot: Goodbye, I hope to see you again."

@@ -656,13 +656,54 @@
       ]
     },
     {
-      "tag": "change_name",
-      "examples": [
-        "I want to change my name",
-        "may I change my name",
-        "can I change my name",
-        "let me change my name"
-      ]
-    }
+  "tag": "change_name",
+  "examples": [
+    "I want to change my name",
+    "may I change my name",
+    "can I change my name",
+    "let me change my name",
+    "I’d like to change my name",
+    "I feel like changing my name",
+    "I want to update my name",
+    "please change my name",
+    "could you change my name",
+    "I'd like to update the name you use for me",
+    "I need to change the name you have saved",
+    "I want you to call me something else",
+    "I want to use a different name",
+    "I want to go by a different name",
+    "can you update my saved name",
+    "change the name you call me",
+    "I want a new name in this chat",
+    "I want my name to be different",
+    "I'd like to switch my name",
+    "please let me use another name"
+  ]
+  },
+  {
+  "tag": "remove_name",
+  "examples": [
+    "remove my name",
+    "delete my name",
+    "clear my name",
+    "forget my name",
+    "erase my name",
+    "stop using my name",
+    "don't keep my name anymore",
+    "remove the name you saved",
+    "delete the name you remember",
+    "please forget what my name is",
+    "I want you to forget my name",
+    "reset my name",
+    "clear the saved name",
+    "I don't want you to remember my name",
+    "delete the name from your memory",
+    "wipe my name",
+    "remove my stored name",
+    "I want my name removed",
+    "forget the name you know",
+    "stop remembering my name"
+  ]
+}
   ]
 }
