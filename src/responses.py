@@ -74,12 +74,15 @@ def greeting_back(user_input: str) -> str:
 
 def support_normal() -> str:
     return (
-        f"Bot: I can do a few simple things, {user_name.value}:\n"
-        "- I can remember your name if you share it with me.\n"
-        "- We can have a bit of small talk.\n"
-        "- You can ask me questions.\n"
-        "- I can also help you browse and filter video games. If you like to do so, please type 'I want to buy some games'.\n\n"
-        "What would you like to do?"
+        f"\nBot: Here's how I can help you, {user_name.value}:\n"
+        "- Chat with you and do a bit of small talk.\n"
+        "- Answer questions from my knowledge base.\n"
+        "- Help ypu browse and filter video games in a dedicated games mode.\n\n"
+        "To enter games mode, you can say things like:\n"
+        "- I want to buy some games.\n"
+        "- Show me some games.\n"
+        "- Go to games mode.\n"
+        "Or, if you prefer, you can just ask a question or say 'help' again.\n"
     )
 
 def small_talk() -> str:
@@ -153,11 +156,18 @@ def game_not_purchased() -> str:
 
 def support_game() -> str:
     return (
-        f"Bot: In games mode, I can help you:\n"
-        "- Search for games by name\n"
-        "- Filter by platform, genre, price, critic score, or release year\n"
-        "- Start a purchase process and remember what you’ve bought\n\n"
-        f"What would you like to do, {user_name.value}?"
+        f"\nYou're in games mode now, {user_name.value}. I can help you:\n"
+        "- Search for games by name.\n"
+        "- Filter games by platform, genre, price, critic score, or release year.\n"
+        "- Buying games.\n"
+        "You can say things like:\n"
+        "- Show me actions games on 'PS4'\n"
+        "- Games under 20 pounds\n"
+        "- Do you have FIFA\n\n"
+        "To start buying process, you can say things like:\n"
+        "- Let me buy the Last of Us\n"
+        "- I am buying Call of Duty\n"
+        "- I'm ready to buy\n"
     )
 
 def user_ends_game_mode() -> str:
