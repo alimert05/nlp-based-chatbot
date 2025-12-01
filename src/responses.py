@@ -18,8 +18,8 @@ user_name = UserNameProxy()
 def ask_name() -> str:
     return "Bot: Welcome to the GAMES SHOP Before we start, could you please tell me your name so I can address you properly?"
 
-def name_already_given() -> str:
-    return f"Bot: You have already gave your name {user_name.value}. Would you like to change it?"
+def name_already_given(new_username) -> str:
+    return f"Bot: You have already gave your name as {user_name.value}. Would you like to change it to {new_username}?"
 
 def confirm_name_change(new_name: str) -> str:
     return f"Bot: Do you confirm your new name: {new_name}? (yes/no)"
@@ -32,7 +32,7 @@ def greeting(name: Optional[str]) -> str:
 def greeting_again() -> str:
     return f"Bot: Welcome back to the GAMES SHOP {user_name.value}! How can I help you today?"
 
-def no_name_change() -> str:
+def no_name_change_or_remove() -> str:
     return f"Bot: No problem, {user_name.value}. How can I help you today?"
 
 def ask_new_name() -> str:
@@ -47,11 +47,17 @@ def name_changed() -> str:
 def recall_name() -> str:
     return f"Bot: Your name is {user_name.value}"
 
+def ask_remove_name() -> str:
+    return "Bot: Just to confirm — would you like me to remove your saved name?"
+
 def name_removed() -> str:
     return "Bot: I've successfully removed your name."
 
 def no_name_to_remove() -> str:
-    return "Bot: I can't remove your name because you haven't provide your name yet"
+    return "Bot: I can't remove your name because you haven’t provided one yet."
+
+def no_name_to_change() -> str:
+    return "Bot: You haven't provided your name yet. Would you like to tell me, so I can address you properly?"
 
 def no_name_to_recall() -> str:
     return "Bot: Sorry, you haven't provided your name yet."

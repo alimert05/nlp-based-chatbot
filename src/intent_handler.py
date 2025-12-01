@@ -25,7 +25,8 @@ from responses import (
     support_game, no_game_found, ask_platform_disambiguation, ask_game_disambiguation,
     confirm_order, game_not_purchased, ask_name_again, name_refused, no_name_to_recall, 
     ask_save_name, purchase_history, user_ends_game_mode, back_from_game_selection, name_already_given,
-    no_name_change, name_changed, ask_new_name, name_already_known, confirm_name_change, name_removed, no_name_to_remove
+    no_name_change_or_remove, name_changed, ask_new_name, name_already_known, confirm_name_change, name_removed, 
+    no_name_to_change, no_name_to_remove, ask_remove_name
 )
 
 class IntentHandler:
@@ -85,9 +86,12 @@ class IntentHandler:
         self.pending_new_name: Optional[str] = None 
         self.waiting_name_confirmation = False  
 
+        self.waiting_name_remove_confirmation = False
+
         # Name decision handling (persistent)
         self.decision = load_name_decision()
         self.username = load_name()
+        self.new_username = None
         self.name_given = True if self.decision is True else False
 
     def _reset_buying_state(self):
@@ -127,20 +131,21 @@ class IntentHandler:
         # Extract cleaned-up game query from template
         self.game_query = self.games_engine._extract_game_query_from_example(user_input, matched_example or "")
         
+        # Name handling
         if self.waiting_name_confirmation:
             self.waiting_name_confirmation = False
             return self._explicit_name_change(user_input, None)
-            
+        
         if self.change_name:
             self.change_name = False
             return self._handle_name_change(user_input)
         
-        # Name introduction / change
         if label == "introduce_self" and not self.explicit_change_flow:
             return self._handle_introduction(user_input, matched_example)
 
-        # If currently in the "do you want to change your name?" mini-flow
         if label == "change_name":
+            if self.name_given is False:
+                return no_name_to_change()
             self.explicit_change_flow = True
             return ask_new_name()
         
@@ -150,8 +155,12 @@ class IntentHandler:
             return self._explicit_name_change(user_input, matched_example)
         
         if label == "remove_name":
-            return self._handle_remove_name()
-
+            self.waiting_name_remove_confirmation = True
+            return ask_remove_name()
+        
+        if self.waiting_name_remove_confirmation:
+            self.waiting_name_remove_confirmation = False
+            return self._handle_remove_name(user_input)
         
         # Goodbye flow
         if self._handle_goodbye_process(label):
@@ -208,23 +217,18 @@ class IntentHandler:
             return ask_save_name()
         return "end"
 
-    # Name Handling (might need improvement)
+    # Name Handling
     def _handle_introduction(self, user_input: str, matched_example: str) -> str:
         """Handle user introduction and name changing."""
         normalised_input = self.name_recogniser.normalise_intro(user_input, matched_example)
         extracted_name = self.name_recogniser.extract_name(normalised_input)
-
+        
         # Case 1: user has not given a name yet (or is giving a new one)
         if self.name_given is False:
             if extracted_name:
                 self.name_given = True
                 save_name(extracted_name)
                 self.username = extracted_name
-
-                # If we were in "change name" mode, this is a new name
-                if self.new_name_given:
-                    self.new_name_given = False
-                    return name_changed()
                 return greeting(extracted_name)
             return ask_name_again()
         
@@ -232,26 +236,26 @@ class IntentHandler:
         if extracted_name.lower() == str(self.username).lower():
             return name_already_known()
         self.change_name = True
-        return name_already_given()
+        self.new_username = extracted_name
+        return name_already_given(self.new_username)
     
     def _handle_name_change(self, user_input: str) -> str:
-        """Handle the yes/no decision when asking to change the stored name."""
+        """Name changing confirmation."""
         text = user_input.strip().lower()
 
         if text == "yes":
-            # Next introduction will be treated as a new name
-            self.new_name_given = True
-            self.name_given = False
-            return ask_new_name()
+            self.name_given = True
+            save_name(self.new_username)
+            self.username = self.new_username
+            return name_changed()
         if text == "no":
-            # Stay with current name, leave change-name flow
             self.change_name = False
             self.new_name_given = False
-            return no_name_change()
+            return no_name_change_or_remove()
         return "Bot: Please answer with 'yes' if you'd like to change your name, or 'no' if you'd like to keep it as it is."
     
     def _explicit_name_change(self, user_input: str, matched_example: Optional[str]) -> str:
-        """Handle explicit name change logic"""
+        """Handle explicit name change logic."""
         if self.waiting_name_confirmation:
             normalised_input = self.name_recogniser.normalise_intro(user_input, matched_example)
             extracted_name = self.name_recogniser.extract_name(normalised_input)
@@ -268,18 +272,27 @@ class IntentHandler:
 
         if text == "no":
             self.waiting_name_confirmation = False
-            return no_name_change()
+            return no_name_change_or_remove()
         
         return "Bot: Please answer with 'yes' if you'd like to change your name, or 'no' if you'd like to keep it as it is."
     
-    def _handle_remove_name(self) -> str:
+    def _handle_remove_name(self, user_input) -> str:
+        """Handle user wants to remove their name."""
+        text = user_input.strip().lower()
+
         if self.name_given:
-            self.name_given = False
-            reset_name()
-            return name_removed()
-        else: 
-            return no_name_change()
+            if text == "yes":
+                self.name_given = False
+                reset_name()
+                return name_removed()
+            if text == "no":
+                return no_name_change_or_remove()
+            return "Bot: Please answer with 'yes' if you'd like to change your name, or 'no' if you'd like to keep it as it is."
+        return no_name_to_remove()
+
         
+    
+    # QA flow handling
     def _handle_qa_answer(self, answer: list, document: list, best_idx: int) -> str:
         """Handle QA engine answers and group consecutive rows from same document."""
         if not document or not answer:
