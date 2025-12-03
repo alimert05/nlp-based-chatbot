@@ -18,7 +18,7 @@ from responses import (games, games_by_name, games_by_platform, games_by_genre, 
     error_price_not_detected, error_price_range_not_detected, error_score_not_detected, error_score_range_not_detected,
     error_year_not_detected, error_year_range_not_detected, purchase_history_deleted, error_developer_not_detected, 
     error_publisher_not_detected, games_cheapest, games_most_expensive, games_lowest_score, games_highest_score, 
-    games_oldest, games_newest
+    games_oldest, games_newest, games_list_platforms, games_list_genres 
 )
 
 class GamesHandler:
@@ -26,7 +26,6 @@ class GamesHandler:
         self.games_engine = GamesEngine()
 
         # Game mode & purchased flow
-        self.game_mode = False
         self.choose_game_name_mode = False
         self.choose_platform_mode = False
         self.buying_process = False
@@ -69,7 +68,10 @@ class GamesHandler:
                 "games_search_lowest_critic",
                 "games_search_highest_critic",
                 "games_search_oldest",
-                "games_search_newest"
+                "games_search_newest",
+                "explore_platforms",
+                "explore_genres",
+                "explore_games"
             }
 
             # While in a multi-step buy process, always treat as game intent
@@ -93,8 +95,16 @@ class GamesHandler:
             label = "games_search_by_genre"
         
         # 0. Games exploration intent (user wants to explore/browse games)
-        if label == "games_explore":
+        if label == "explore_games":
             return games_explore()
+        
+        # 0.1 List all platforms
+        if label == "explore_platforms":
+            return games_list_platforms(self.games_engine.platforms)
+
+        # 0.2 List all genres
+        if label == "explore_genres":
+            return games_list_genres(self.games_engine.genre)
 
         # 1. User wants to leave entirely from buying process
         if label == "dont_want_games":
@@ -132,7 +142,7 @@ class GamesHandler:
         
         # 8. Confirmation step
         if self.buying_process:
-            return self._handle_buy_confirmation(user_input)
+            return self._handle_buy_confirmation(label, user_input)
     
         return fallback()
             
@@ -468,24 +478,20 @@ class GamesHandler:
         self.buy_candidates = candidates
         return ask_game_disambiguation(candidates)
 
-    def _handle_buy_confirmation(self, user_input: str) -> Optional[str]:
+    def _handle_buy_confirmation(self, label: str, user_input: str) -> Optional[str]:
         """Handle buy confirmation (yes/no)"""
-        text = user_input.strip().lower()
+        # text = user_input.strip().lower()
         
-        if text == "no":
+        if user_input == "no" or label == "confirm_order_negative":
             self._reset_buying_state()
             return game_not_purchased()
         
-        if text == "yes":
+        if user_input == "yes" or label == "confirm_order_positive":
             platform = self.current_platform_choice
             price = self.current_price_choice
             title = self.selected_game_title 
 
             save_purchased_game(title, platform, price)
-            
-            self.game_mode = False
             self._reset_buying_state()
-            
             return game_purchased(title, platform, price)
-        
         return error_confirm_oder()

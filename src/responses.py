@@ -295,6 +295,31 @@ def error_developer_not_detected() -> str:
 
 
 # ======= PLATFORM / GENRE LISTING =======
+def games_list_platforms(platforms: List[str]) -> str:
+    if not platforms:
+        return f"Bot: I couldn't find any platforms in my catalogue right now, {user_name.value}."
+    
+    # sort and make a nice bullet list
+    unique_sorted = sorted(set(p for p in platforms if p))
+    lines = [f"- {p}" for p in unique_sorted]
+    listing = "\n".join(lines)
+    return (
+        f"Bot: {user_name.value}, here are the platforms you can browse games for:\n"
+        f"{listing}"
+    )
+
+def games_list_genres(genres: List[str]) -> str:
+    if not genres:
+        return f"Bot: I couldn't find any genres in my catalogue right now, {user_name.value}."
+    
+    unique_sorted = sorted(set(g for g in genres if g))
+    lines = [f"- {g}" for g in unique_sorted]
+    listing = "\n".join(lines)
+    return (
+        f"Bot: {user_name.value}, here are the game genres you can search:\n"
+        f"{listing}"
+    )
+
 def games_by_attribute(attr_name: str, attr_value: str, titles: List[str], attributes: List[str]) -> str:
     if not titles:
         return f"Bot: Sorry {user_name.value}, I couldn't find any games for {attr_value}."

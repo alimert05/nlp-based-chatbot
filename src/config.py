@@ -75,8 +75,7 @@ PLATFORM_ALIASES = {
 
     # Handheld / Mobile / Special Platforms
     "NGage":   ["ngage", "n-gage"],
-    "AJ":      ["aj"],
-    "All":     ["all platforms", "multi platform"]
+    "AJ":      ["aj"]
 }
 
 GENRE_ALIASES = {

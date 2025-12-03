@@ -9,6 +9,7 @@
         "call me",
         "you can call me",
         "this is",
+        "its",
         "it is",
         "it's",
         "hey, I'm",
@@ -19,6 +20,23 @@
         "i prefer to be called",
         "let's say my name is",
         "you may call me"
+      ]
+    },
+    {
+      "tag": "introduce_new_name",
+      "examples": [
+        "my new name is",
+        "it's ",
+        "it is",
+        "its",
+        "I want to change it to ",
+        "you can call me ",
+        "please use the name ",
+        "use the name ",
+        "change my name to ",
+        "change it to",
+        "my name is",
+        "call me "
       ]
     },
     {
@@ -173,6 +191,52 @@
       ]
     },
     {
+      "tag": "confirm_save_name_goodbye",
+      "examples": [
+        "yes save it",
+        "i confirm",
+        "yes please save it",
+        "yeah save it",
+        "sure save my name",
+        "yes go ahead",
+        "okay save it",
+        "ok save it",
+        "save my name",
+        "confirm",
+        "i confirm saving my name",
+        "that's fine save it",
+        "yes keep my name",
+        "yes you can save it",
+        "yep save it",
+        "yes please",
+        "yes do it",
+        "sounds good save it"
+      ]
+    },
+    {
+      "tag": "no_confirm_save_name_goodbye",
+      "examples": [
+        "i don't confirm",
+        "i dont confirm",
+        "no don't save it",
+        "no dont save it",
+        "don't save my name",
+        "dont save my name",
+        "no please don't save it",
+        "i don't want you to save it",
+        "i dont want you to save it",
+        "no thanks",
+        "no thanks don't save it",
+        "leave it unsaved",
+        "no do not save it",
+        "never mind don't save it",
+        "nope don't save it",
+        "don't keep it",
+        "dont keep my name",
+        "no i don't want that"
+      ]
+    },
+    {
       "tag": "games_list",
       "examples": [
         "what games do you have",
@@ -232,10 +296,35 @@
     {
       "tag": "games_search_by_genre",
       "examples": [
-        "show me  games",
-        "list  games",
-        "find  games",
-        "do you have any  games"
+        "list all genres",
+        "what genres do you have",
+        "which genres are available",
+        "what kinds of games do you have",
+        "show me all genres",
+        "what game genres can I browse",
+        "which game categories are there",
+        "what types of games do you support"
+      ]
+    },
+    {
+      "tag": "explore_platforms",
+      "examples": [
+        "list all platforms",
+        "what platforms do you have",
+        "which platforms are available",
+        "which platforms do you support",
+        "what platforms can I browse",
+        "show me all platforms",
+        "what consoles do you have",
+        "what systems can I play on",
+        "which gaming platforms are there"
+      ]
+    },
+    {
+      "tag": "explore_genres",
+      "examples": [
+        "what genres do you have",
+        "list all genres"
       ]
     },
     {
@@ -583,7 +672,7 @@
       ]
     },
     {
-      "tag": "games_explore",
+      "tag": "explore_games",
       "examples": [
         "i want to buy some games",
         "let's talk about games",
@@ -616,7 +705,6 @@
       "tag": "confirm_order_positive",
       "examples": [
         "confirm my order",
-        "yes",
         "yeah",
         "yep",
         "sure",
@@ -632,7 +720,6 @@
     {
       "tag": "confirm_order_negative",
       "examples": [
-        "no",
         "nah",
         "nope",
         "actually no",
@@ -669,8 +756,11 @@
       "tag": "dont_want_games",
       "examples": [
         "I don't want to buy a game",
+        "I dont want to buy a game",
         "I don't want games",
+        "I dont want games",
         "I don't want to buy any game",
+        "I dont want to buy any game",
         "no games",
         "stop the games",
         "I changed my mind about games",
@@ -679,6 +769,7 @@
         "take me out of game mode",
         "I'm done with games",
         "I don't want to see games now",
+        "I dont want to see games now",
         "no more games please",
         "leave the games section",
         "go back from games"
@@ -725,6 +816,55 @@
   ]
   },
   {
+    "tag": "change_name_confirmed",
+    "examples": [
+    "yes change it",
+    "yeah change it",
+    "yes please change it",
+    "okay change it",
+    "ok change it",
+    "sure change my name",
+    "i confirm",
+    "i confirm the name change",
+    "yes i want to change it",
+    "yes i want that",
+    "do it",
+    "go ahead",
+    "go ahead change it",
+    "yes go ahead",
+    "yep change it",
+    "alright change it",
+    "change it please",
+    "yes that's fine"
+    ]
+  },
+  {
+  "tag": "change_name_not_confirmed",
+  "examples": [
+    "no don't change it",
+    "no dont change it",
+    "no keep it the same",
+    "no keep my current name",
+    "no leave it",
+    "i don't want to change it",
+    "i dont want to change it",
+    "i don't confirm",
+    "i dont confirm",
+    "no i don't confirm",
+    "no i dont confirm",
+    "no thanks",
+    "no thank you",
+    "stop",
+    "cancel",
+    "forget it",
+    "never mind",
+    "nah leave it",
+    "no please don't",
+    "don't change my name",
+    "dont change my name"
+  ]
+  },
+  {
   "tag": "remove_name",
   "examples": [
     "remove my name",
@@ -748,6 +888,51 @@
     "forget the name you know",
     "stop remembering my name"
   ]
+},
+{
+  "tag": "remove_name_confirmed",
+  "examples": [
+    "yes remove it",
+    "yes delete it",
+    "remove it",
+    "delete it",
+    "delete my name",
+    "remove my name",
+    "yes please remove it",
+    "yeah remove it",
+    "yep remove it",
+    "okay remove it",
+    "ok delete it",
+    "alright remove it",
+    "i confirm remove it",
+    "go ahead remove it",
+    "confirm remove",
+    "yes that's fine",
+    "yes do it"
+  ]
+},
+{
+  "tag": "remove_name_not_confirmed",
+  "examples": [
+    "no don't remove it",
+    "no dont remove it",
+    "no keep it",
+    "keep my name",
+    "keep it the same",
+    "keep my saved name",
+    "don't delete it",
+    "dont delete it",
+    "no i want to keep it",
+    "leave it",
+    "leave my name",
+    "no thanks",
+    "nah",
+    "stop",
+    "cancel",
+    "never mind",
+    "forget it"
+  ]
 }
+
   ]
 }

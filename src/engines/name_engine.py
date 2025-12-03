@@ -9,8 +9,44 @@ NAME_WORD = r"[A-Za-zÀ-ÖØ-öø-ÿ]+(?:[-'][A-Za-zÀ-ÖØ-öø-ÿ]+)?"
 # A name phrase: 1-3 words
 NAME_PHRASE = rf"{NAME_WORD}(?:\s+{NAME_WORD}){{0,2}}"
 
-# Pattern 1: full sentence with an intro phrase
-PATTERN1 = re.compile(rf"^(?:\s*(?:hi|hello|hey)\s*,?\s*)?(?:my name is|my name's|i am|i'm|im|this is|call me|you can call me|it is|it's)\s+({NAME_PHRASE})(?=\s*[,.!?;:]|\s*$)", re.IGNORECASE)
+# All intro phrases from introduce_self + introduce_new_name
+INTRO_PHRASES = (
+    # New-name specific
+    r"my new name is|"
+    r"i want to change it to|"
+    r"change my name to|"
+    r"change it to|"
+    r"please use the name|"
+    r"use the name|"
+
+    # Generic name-intro phrases
+    r"my name is|"
+    r"hi, my name is|"
+    r"let's say my name is|"
+
+    r"i am|i'm|im|"
+    r"this is|"
+
+    r"call me|"
+    r"you can call me|"
+    r"you can just call me|"
+    r"you may call me|"
+    r"people call me|"
+    r"i go by|"
+    r"i prefer to be called|"
+
+    # Variants of "it is"
+    r"it is|it's|its"
+)
+
+# Pattern 1: full sentence with an intro phrase, then a name, stopping at punctuation/comma
+PATTERN1 = re.compile(
+    rf"^(?:\s*(?:hi|hello|hey)\s*,?\s*)?"        # optional greeting
+    rf"(?:{INTRO_PHRASES})\s+"                   # one of the intro phrases
+    rf"({NAME_PHRASE})"                          # the actual name
+    r"(?=\s*(?:[,.!?;:]|$))",                    # stop before comma/punctuation or end
+    re.IGNORECASE,
+)
 
 # Pattern 2: only name
 PATTERN2 = re.compile(rf"^\s*({NAME_PHRASE})\s*$", re.IGNORECASE)
