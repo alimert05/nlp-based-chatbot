@@ -31,7 +31,8 @@
         "I don't want to tell you my name",
         "I'd like to keep my name private",
         "I won't share my name",
-        "I don't feel comfortable giving my name"
+        "I don't feel comfortable giving my name",
+        "I don't want to give my name"
       ]
     },
     {
@@ -195,15 +196,12 @@
         "have you got",
         "can you find",
         "do you sell",
-        "can I buy",
         "is there",
-        "show me",
         "find me",
         "I'm looking for",
         "search for",
         "do you carry",
         "do you stock",
-        "can you get",
         "do you offer",
         "I'm interested in",
         "I'd like to get",
@@ -213,106 +211,31 @@
         "can you check if you have",
         "do you have a copy of",
         "do you have any version of",
-        "could you look up",
-        "can you see if you sell"
+        "could you look up"
       ]
     },
     {
       "tag": "games_search_by_platform",
       "examples": [
-        "show me games for pc",
-        "show me games for ps",
-        "show me games for x",
-        "show me games for xbox",
-        "do you have any pc games",
-        "do you have any ps games",
-        "do you have any x games",
-        "do you have any xbox games",
-        "list games for pc",
-        "list games for ps",
-        "list games for x",
-        "list games for xbox",
-        "what playstation games do you have",
-        "any games for playstation",
-        "any games for ps4",
-        "any games for ps5",
-        "what xbox games do you have",
-        "what pc games are available",
-        "show me console games",
-        "show me playstation games",
-        "show me xbox games",
-        "show me pc games"
+        "show me games for ",        
+        "do you have any  games",
+        "list games for ",
+        "what  games do you have",
+        "any games for ",
+        "what  games are available",
+        "show me  games",
+        "show me games available on",
+        "list games available on",
+        "do you have any games available on"
       ]
     },
     {
       "tag": "games_search_by_genre",
       "examples": [
-        "show me action games",
-        "list action games",
-        "find action games",
-        "do you have any action games",
-
-        "show me adventure games",
-        "list adventure games",
-        "find adventure games",
-        "do you have any adventure games",
-
-        "show me horror games",
-        "list horror games",
-        "find horror games",
-        "do you have any horror games",
-
-        "show me shooter games",
-        "list shooter games",
-        "find shooter games",
-        "do you have any shooter games",
-
-        "show me simulation games",
-        "list simulation games",
-        "find simulation games",
-        "do you have any simulation games",
-
-        "show me strategy games",
-        "list strategy games",
-        "find strategy games",
-        "do you have any strategy games",
-
-        "show me sports games",
-        "list sports games",
-        "find sports games",
-        "do you have any sports games",
-
-        "show me racing games",
-        "list racing games",
-        "find racing games",
-        "do you have any racing games",
-
-        "show me fighting games",
-        "list fighting games",
-        "find fighting games",
-        "do you have any fighting games",
-
-        "show me role-playing games",
-        "list role-playing games",
-        "find role-playing games",
-        "do you have any role-playing games",
-
-        "show me RPG games",
-        "list RPG games",
-        "find RPG games",
-        "do you have any RPG games",
-
-        "show me puzzle games",
-        "list puzzle games",
-        "find puzzle games",
-        "do you have any puzzle games",
-
-        "i want horror games",
-        "i'm looking for sports games",
-        "do you have any good racing games",
-        "can you show me some shooters",
-        "any nice adventure games",
-        "i want some story-rich games"
+        "show me  games",
+        "list  games",
+        "find  games",
+        "do you have any  games"
       ]
     },
     {
@@ -398,7 +321,7 @@
       "tag": "games_search_by_price_between",
       "examples": [
         "do you have games cost between pounds",
-        "show me games between",
+        "show me games costs between",
         "find games between",
         "list games between",
         "games between",
@@ -415,6 +338,40 @@
         "i'm looking for games in the range",
         "games in the price range between"
       ]
+    },
+    {
+    "tag": "games_search_cheapest",
+    "examples": [
+      "show me the cheapest games",
+      "what are the cheapest games you have",
+      "find the cheapest games",
+      "list the cheapest games",
+      "which games are the cheapest",
+      "any really cheap games",
+      "show the lowest priced games",
+      "games with the lowest price",
+      "can you show me the cheapest ones",
+      "i want the cheapest games",
+      "what is the cheapest game",
+      "what are your cheapest games"
+    ]
+  },
+  {
+    "tag": "games_search_most_expensive",
+    "examples": [
+      "show me the most expensive games",
+      "what are the most expensive games you have",
+      "find the most expensive games",
+      "list the most expensive games",
+      "which games are the most expensive",
+      "any really expensive games",
+      "show the highest priced games",
+      "games with the highest price",
+      "can you show me the most expensive ones",
+      "i want the most expensive games",
+      "what is the most expensive game",
+      "what are your most expensive games"
+    ]
     },
     {
       "tag": "games_search_by_critic_low",
@@ -467,6 +424,46 @@
         "games with reviews from to",
         "titles with score between and"
       ]
+    },
+    {
+      "tag": "games_search_lowest_critic",
+      "examples": [
+        "show me the lowest rated games",
+        "what are the lowest rated games you have",
+        "find the worst rated games",
+        "list the lowest scoring games",
+        "which games have the lowest critic score",
+        "any poorly rated games",
+        "show games with the lowest rating",
+        "games with the worst critic score",
+        "can you show me the lowest rated ones",
+        "I want the lowest rated games",
+        "what is the lowest rated game",
+        "which game has the lowest score",
+        "show me the games with the worst reviews",
+        "find games that scored really low",
+        "games with bad critic scores"
+      ]
+    },
+    {
+    "tag": "games_search_highest_critic",
+    "examples": [
+      "show me the highest rated games",
+      "what are the highest rated games you have",
+      "find the best rated games",
+      "list the highest scoring games",
+      "which games have the highest critic score",
+      "any top rated games",
+      "show games with the highest rating",
+      "games with the best critic score",
+      "can you show me the highest rated ones",
+      "I want the highest rated games",
+      "what is the highest rated game",
+      "which game has the highest score",
+      "show me the games with the best reviews",
+      "find games that scored really high",
+      "games with excellent critic scores"
+    ]
     },
     {
       "tag": "games_search_by_release_before",
@@ -546,20 +543,58 @@
       ]
     },
     {
-      "tag": "games_mode_on",
+      "tag": "games_search_oldest",
+      "examples": [
+        "show me the oldest games",
+        "what are the oldest games you have",
+        "find the earliest released games",
+        "list the oldest games",
+        "which games were released the earliest",
+        "any very old games",
+        "show games from the earliest years",
+        "games released a long time ago",
+        "can you show me the oldest ones",
+        "I want the oldest games",
+        "what is the oldest game you have",
+        "which game was released the earliest",
+        "find games from many years ago",
+        "show really old games",
+        "games released the longest time ago"
+      ]
+    },
+    {
+      "tag": "games_search_newest",
+      "examples": [
+        "show me the newest games",
+        "what are the newest games you have",
+        "find the latest released games",
+        "list the newest games",
+        "which games were released most recently",
+        "any brand new games",
+        "show the most recently released games",
+        "games released lately",
+        "can you show me the newest ones",
+        "I want the newest games",
+        "what is the newest game you have",
+        "which game was released the latest",
+        "find games released this year",
+        "show recently released games",
+        "games that came out recently"
+      ]
+    },
+    {
+      "tag": "games_explore",
       "examples": [
         "i want to buy some games",
         "let's talk about games",
         "i want to browse games",
         "i want to buy a game",
-        "show me some games to buy",
         "i would like to look at games",
-        "take me to games mode",
         "can we talk about games",
         "let's go to game shop",
-        "i want to see your game store",
+        "i want to see your game options",
         "i'd like to check your games",
-        "go to games mode"
+        "let me buy some games"
       ]
     },
     {
@@ -620,6 +655,14 @@
         "what game did we buy",
         "remind me what I bought",
         "what was my last purchase"
+      ]
+    },
+    {
+      "tag": "delete_purchase_history",
+      "examples": [
+        "delete my purchase history",
+        "remove all item in my purchase history",
+        "reset my purchase history"
       ]
     },
     {

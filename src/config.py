@@ -35,24 +35,71 @@ INTENTS_PATH  = PROJECT_ROOT / "data" / "intents" / "intents.json"
 
 # Platform and Genre Aliases 
 PLATFORM_ALIASES = {
-    "PS3": ["playstation 3", "playstation3", "ps3", "ps 3"],
-    "PS4": ["playstation 4", "playstation4", "ps4", "ps 4"],
-    "PS5": ["playstation 5", "playstation5", "ps5", "ps 5"],
-    "PC":  ["pc", "computer", "windows"],
-    "X360": ["xbox 360", "xbox360", "x360", "x 360"],
-    "XOne": ["xbox one", "xboxone", "xone", "x one"],
+    # PlayStation Family
+    "PS":      ["ps", "playstation"],
+    "PS2":     ["ps2", "playstation 2", "ps 2"],
+    "PS3":     ["ps3", "playstation 3", "ps 3"],
+    "PS4":     ["ps4", "playstation 4", "ps 4"],
+    "PS5":     ["ps5", "playstation 5", "ps 5"],
+    "PSP":     ["psp", "playstation portable"],
+    "PSV":     ["vita", "psvita", "ps vita", "playstation vita"],
+    
+    # Xbox Family
+    "XBOX":    ["xbox"],
+    "X360":    ["xbox 360", "x360", "x 360"],
+    "XOne":    ["xbox one", "xone", "x one"],
+    "XS":      ["xbox series x", "xbox series s", "series x", "series s", "xsx", "xss"],
+
+    # Nintendo Family
+    "NES":     ["nes", "nintendo entertainment system"],
+    "SNES":    ["snes", "super nintendo"],
+    "N64":     ["n64", "nintendo 64"],
+    "GC":      ["gamecube", "gc"],
+    "Wii":     ["wii"],
+    "WiiU":    ["wiiu", "wii u"],
+    "GB":      ["gameboy", "game boy"],
+    "GBC":     ["gameboy color", "game boy color"],
+    "GBA":     ["gba", "gameboy advance", "game boy advance"],
+    "DS":      ["ds", "nintendo ds"],
+    "DSiW":    ["dsi", "dsiware"],
+    "3DS":     ["3ds", "nintendo 3ds"],
+    "NS":      ["switch", "nintendo switch"],
+
+    # Sega
+    "GEN":     ["genesis", "mega drive"],
+    "DC":      ["dreamcast", "dc"],
+    
+    # PC / Computer
+    "PC":      ["pc", "computer", "windows"],
+    "Linux":   ["linux"],
+
+    # Handheld / Mobile / Special Platforms
+    "NGage":   ["ngage", "n-gage"],
+    "AJ":      ["aj"],
+    "All":     ["all platforms", "multi platform"]
 }
 
 GENRE_ALIASES = {
-    "Action": ["action", "action-adventure"],
-    "Adventure": ["adventure", "story"],
-    "RPG": ["rpg", "role-playing", "role playing"],
-    "Shooter": ["shooter", "fps", "first person shooter"],
-    "Sports": ["sports", "sport", "football", "soccer", "basketball"],
-    "Racing": ["racing", "driving"],
-    "Simulation": ["simulation", "simulator", "sim"],
-    "Strategy": ["strategy", "tactics"],
-    "Puzzle": ["puzzle", "brain", "logic"]
+    "Action":          ["action", "action-adventure", "hack and slash"],
+    "Adventure":       ["adventure", "story", "narrative"],
+    "Arcade":          ["arcade"],
+    "Board Game":      ["board", "board game"],
+    "Education":       ["educational", "learning"],
+    "Fighting":        ["fighting", "fighter", "beat 'em up"],
+    "MMO":             ["mmo", "massively multiplayer"],
+    "Misc":            ["misc", "other", "various"],
+    "Music":           ["music", "rhythm"],
+    "Party":           ["party", "mini games"],
+    "Platform":        ["platformer", "platform"],
+    "Puzzle":          ["puzzle", "brain", "logic"],
+    "Racing":          ["racing", "driving", "car game"],
+    "Role-Playing":    ["rpg", "role-playing", "role playing", "jrpg"],
+    "Sandbox":         ["sandbox", "open world"],
+    "Shooter":         ["shooter", "fps", "tps", "first person shooter", "third person shooter"],
+    "Simulation":      ["simulation", "sim", "simulator"],
+    "Sports":          ["sports", "sport", "football", "soccer", "basketball", "tennis"],
+    "Strategy":        ["strategy", "tactics", "rts", "turn-based", "turn based"],
+    "Visual Novel":    ["visual novel", "vn", "story game"],
 }
 
 

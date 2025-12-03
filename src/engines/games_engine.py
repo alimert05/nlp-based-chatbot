@@ -155,6 +155,44 @@ class GamesEngine:
         return matched_titles, matched_genres
     
     # Price Filters
+    def get_extreme_price_games(self, mode: str):
+        """
+        mode: 'cheapest' or 'most_expensive'
+        Returns (extreme_price, titles, prices, platforms)
+        """
+        titles = self.titles
+        platforms = self.platforms
+
+        prices = []
+        for p in self.price:
+            try:
+                prices.append(float(p))
+            except (TypeError, ValueError):
+                prices.append(None)
+
+        cleaned = [(t, pr, pl) for t, pr, pl in zip(titles, prices, platforms) if pr is not None]
+        if not cleaned:
+            return None, [], [], []
+
+        titles, prices, platforms = zip(*cleaned)
+
+        if mode == "cheapest":
+            extreme = min(prices)
+        else:  # most_expensive
+            extreme = max(prices)
+
+        matched_titles = []
+        matched_prices = []
+        matched_platforms = []
+
+        for t, p, pl in zip(titles, prices, platforms):
+            if p == extreme:
+                matched_titles.append(t)
+                matched_prices.append(p)
+                matched_platforms.append(pl)
+
+        return extreme, matched_titles, matched_prices, matched_platforms
+
     def filter_prices(self, mode: str, price1: float, price2: Optional[float] = None):
         """
         Filtering modes:
@@ -163,7 +201,6 @@ class GamesEngine:
             exact -> price == p1
             between -> p1 <= price <= p2
         """
-
         titles, prices, platforms = [], [], []
 
         if price2 is not None and price1 > price2:
@@ -182,7 +219,6 @@ class GamesEngine:
             except (TypeError, ValueError):
                 continue
 
-
             if (
                 (mode == "before" and round(value) < price1)
                 or (mode == "after" and round(value) > price1)
@@ -195,7 +231,45 @@ class GamesEngine:
 
         return titles, prices, platforms 
     
-    # score filtering  
+    # score filtering
+    def get_extreme_score_games(self, mode: str):
+        """
+        mode: 'lowest' or 'highest'
+        Returns (extreme_scores, titles, scores, platforms)
+        """
+        titles = self.titles
+        platforms = self.platforms
+
+        scores = []
+        for cs in self.critic_score:
+            try:
+                scores.append(float(cs))
+            except (TypeError, ValueError):
+                scores.append(None)
+
+        cleaned = [(t, sc, pl) for t, sc, pl in zip(titles, scores, platforms) if sc is not None]
+        if not cleaned:
+            return None, [], [], []
+
+        titles, scores, platforms = zip(*cleaned)
+
+        if mode == "lowest":
+            extreme = min(scores)
+        else:  # highest
+            extreme = max(scores)
+
+        matched_titles = []
+        matched_scores = []
+        matched_platforms = []
+
+        for t, cs, pl in zip(titles, scores, platforms):
+            if cs == extreme:
+                matched_titles.append(t)
+                matched_scores.append(cs)
+                matched_platforms.append(pl)
+
+        return extreme, matched_titles, matched_scores, matched_platforms
+      
     def filter_scores(self, mode: str, score1: float, score2: Optional[float] = None):
         """
         Same modes as price filtering.
@@ -240,6 +314,40 @@ class GamesEngine:
             return int(date_str[:4])
         except Exception:
             return None
+        
+    def get_extreme_release_dates(self, mode: str):
+        """
+        mode: 'oldest' or 'newest'
+        Returns (extreme_years, titles, years, platforms)
+        """
+        if mode not in {"oldest", "newest"}:
+                raise ValueError("mode must be 'oldest' or 'newest'")
+
+        records = []
+        for title, date_obj, platform in zip(self.titles, self.release_date, self.platforms):
+            year = self._extract_year(str(date_obj))
+            if year is not None:
+                records.append((title, year, platform))
+
+        if not records:
+            return None, [], [], []
+
+        if mode == "oldest":
+            extreme_year = min(year for _, year, _ in records)
+        else:  # "newest"
+            extreme_year = max(year for _, year, _ in records)
+
+        matched_titles = []
+        matched_years = []
+        matched_platforms = []
+
+        for title, year, platform in records:
+            if year == extreme_year:
+                matched_titles.append(title)
+                matched_years.append(year)
+                matched_platforms.append(platform)
+
+        return extreme_year, matched_titles, matched_years, matched_platforms
 
     def filter_date(self, mode: str, year1: float, year2: Optional[float] = None):
         """
