@@ -26,12 +26,12 @@ class GamesHandler:
         self.games_engine = GamesEngine()
 
         # Game mode & purchased flow
+        self.only_one_platform = False
+        self.only_one_game = False
         self.choose_game_name_mode = False
         self.choose_platform_mode = False
         self.buying_process = False
-        self.only_one_platform = False
-        self.only_one_game = False
-
+        
         self.selected_game_title: Optional[str] = None
         self.current_platform_choice: Optional[str] = None
         self.current_price_choice: Optional[float] = None
@@ -143,9 +143,10 @@ class GamesHandler:
         # 8. Confirmation step
         if self.buying_process:
             return self._handle_buy_confirmation(label, user_input)
-    
+
         return fallback()
-            
+
+    # Resets all flags related to buying process
     def _reset_buying_state(self):
         """Reset all game-purchase-related state."""
         self.buying_process = False
@@ -167,6 +168,7 @@ class GamesHandler:
             return no_purchase_history()
         return purchase_history(title, platform, price)
     
+    # Resets purchase history
     def _handle_reset_purchase_history(self) -> str:
         reset_purchased_game()
         return purchase_history_deleted()
@@ -189,7 +191,8 @@ class GamesHandler:
             self.current_platforms = platforms
             self.current_prices = prices
             self.selected_game_title = title
-
+            
+            # If only one platform is available for chosen game, return confirmation
             if len(platforms) == 1:
                 self.only_one_platform = True
                 self.choose_platform_mode = False
@@ -197,13 +200,14 @@ class GamesHandler:
                 self.current_price_choice = self.current_prices[0]
                 return confirm_order(self.selected_game_title, self.current_platforms[0], self.current_prices[0])
             
+            # Else ask user to choose platform
             self.choose_platform_mode = True
             return ask_platform_disambiguation(title, platforms, prices)
 
         # Choose platform by number
         if self.choose_platform_mode:
             if selected_id is None or not (1 <= selected_id <= len(self.current_platforms)):
-                return error_selection_invalid(len(self.buy_candidates))
+                return error_selection_invalid(len(self.current_platforms))
 
             platform = self.current_platforms[selected_id - 1]
             price = self.current_prices[selected_id - 1]
@@ -237,6 +241,7 @@ class GamesHandler:
         if self.only_one_game and self.only_one_platform:
             self._reset_buying_state()
             return back_from_game_selection()
+
 
         if self.only_one_platform:
             self.choose_game_name_mode = True
@@ -454,6 +459,7 @@ class GamesHandler:
                 "prices": prices_list
             })
 
+        # If there are no candidates check if there are multiple platform or not
         if len(candidates) == 1:
             self.only_one_game = True
             selected = candidates[0]
@@ -465,6 +471,7 @@ class GamesHandler:
             self.current_prices = prices_list
             self.selected_game_title = title
 
+            # If there is one platform then return confirmation
             if len(platforms_list) == 1:
                 self.only_one_platform = True
                 self.current_platform_choice = self.current_platforms[0]
@@ -474,24 +481,23 @@ class GamesHandler:
                 self.choose_platform_mode = True
                 return ask_platform_disambiguation(title, platforms_list, prices_list)
 
+        # Else ask to select game
         self.choose_game_name_mode = True
         self.buy_candidates = candidates
         return ask_game_disambiguation(candidates)
 
-    def _handle_buy_confirmation(self, label: str, user_input: str) -> Optional[str]:
-        """Handle buy confirmation (yes/no)"""
-        # text = user_input.strip().lower()
-        
-        if user_input == "no" or label == "confirm_order_negative":
+    def _handle_buy_confirmation(self, label: str, user_input: str) -> str:
+        """Handle buy confirmation (positive/negative)"""
+        if user_input.lower() == "no" or label == "confirm_negative":
             self._reset_buying_state()
             return game_not_purchased()
         
-        if user_input == "yes" or label == "confirm_order_positive":
+        if user_input.lower() == "yes" or label == "confirm_positive":
             platform = self.current_platform_choice
             price = self.current_price_choice
             title = self.selected_game_title 
-
             save_purchased_game(title, platform, price)
             self._reset_buying_state()
             return game_purchased(title, platform, price)
+        
         return error_confirm_oder()

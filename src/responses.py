@@ -122,8 +122,8 @@ def support() -> str:
         "2) If that game is on multiple platforms, I'll show the platforms and prices so you can choose.\n"
         "3) Confirm your choice and price, and ask you to answer with 'yes', 'no', or 'back'.\n"
         "\n🔁 Changing your mind\n"
-        "- You can type 'back' during the buying steps to go one step up.\n"
-        "- You can say 'I don't want games' if you’d like to stop talking about games.\n"
+        "- You can type 'back' during anything to go one step up.\n"
+        "- You can say 'I don't want games' if you'd like to stop talking about games.\n"
         "\nJust ask in your own words, and I'll do my best to understand what you want next, "
         f"{user_name.value}.\n"
     )
@@ -139,6 +139,8 @@ def user_feeling_negative() -> str:
 
 # Some questions have multiple answers, so it returns random answers from answer list
 def qa_answers(answer_list: List[str]) -> str:
+    if not answer_list:
+        return fallback()
     return f"Bot: {random.choice(answer_list)}"
 
 def goodbye_saved_name() -> str:
@@ -175,7 +177,7 @@ def ask_game_disambiguation(candidates: List[dict]) -> str:
         lines.append(f"{i+1}. {c['title']} - Platforms: {platform_list}")
 
     result = "\n".join(lines)
-    return f"Bot: I found multiple games that could match what you asked for:\n{result}\nPlease reply with the number of the game you're interested in, or type 'back' {user_name.value}."
+    return f"Bot: Okay {user_name.value}, I found multiple games that could match what you asked for:\n{result}\nPlease reply with the number of the game you're interested in, or type 'back' if you want to another game."
 
 def ask_platform_disambiguation(game_title: str, platforms: List[str], prices: Optional[List[float]] = None) -> str:
     if prices and len(prices) == len(platforms):
@@ -183,7 +185,7 @@ def ask_platform_disambiguation(game_title: str, platforms: List[str], prices: O
     else:
         lines = [f"{i+1}. {p}" for i, p in enumerate(platforms)]
     platforms_str = "\n".join(lines)
-    return f"Bot: {game_title} is available on multiple platforms:\n{platforms_str}\nPlease reply with the number of the platform you want, or type 'back' {user_name.value}."
+    return f"Bot: Okay {user_name.value}, {game_title} is available on multiple platforms:\n{platforms_str}\nPlease reply with the number of the platform you want, or type 'back' if you want to reselect the game."
 
 def back_from_game_selection() -> str:
     return f"Bot: Okay, we've gone back a step. How can I help you now, {user_name.value}?"
@@ -192,7 +194,7 @@ def error_selection_invalid(candidate_length: int) -> str:
     return f"Bot: Please reply with a number between 1 and {candidate_length}."
 
 def games_explore() -> str:
-    return f"Bot: Sure thing {user_name.value}! Do you have specific game in your mind, or would you like to browse?"
+    return f"Bot: Sure thing {user_name.value}! You can ask me to search by genre, platform, price, release year, or even look up a specific title."
 
 def user_ends_game_mode() -> str:
     return f"Bot: That's fine, {user_name.value}. We can talk about something other than games. What would you like to do next?"
@@ -319,7 +321,7 @@ def games_list_genres(genres: List[str]) -> str:
         f"Bot: {user_name.value}, here are the game genres you can search:\n"
         f"{listing}"
     )
-
+    
 def games_by_attribute(attr_name: str, attr_value: str, titles: List[str], attributes: List[str]) -> str:
     if not titles:
         return f"Bot: Sorry {user_name.value}, I couldn't find any games for {attr_value}."

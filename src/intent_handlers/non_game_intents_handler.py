@@ -17,7 +17,7 @@ from responses import (
     error_name_change_confirmation, error_name_remove_confirmation, back_from_goodbye, same_as_old_name,
     back_from_name_change, error_ask_save_name
 )
-from game_intents_handler import GamesHandler
+from intent_handlers.game_intents_handler import GamesHandler
 
 class IntentHandler:
     
@@ -52,7 +52,7 @@ class IntentHandler:
         self.name_refused = False
         self.change_name = False
         self.new_name_given = False
-        self.normalised_name = Optional[str]
+        self.normalised_name = Optional[str] 
         self.extracted_name = Optional[str]
 
         # Explicit name-change flow
@@ -68,6 +68,7 @@ class IntentHandler:
         self.name_given = True if self.decision is True else False
         self.goodbye_process = False
         self.goodbye_error = False
+        self.greeting_process = False
 
     # Remove everything from the FIRST comma onward
     def _clean_user_input(self, text: str) -> str:
@@ -82,12 +83,6 @@ class IntentHandler:
 
         # Get QA engine response
         answer, qa_score, document, best_idx = self.qa_engine.search(user_input)
-        
-        # # Hand-crafted override for "I don't want games" style messages
-        # text = user_input.lower()
-        # if "don't" in text or "dont" in text:
-        #     if "game" in text or "buy" in text:
-        #         label = "dont_want_games"
 
         # Extract cleaned-up game query from template
         game_query = self.games_engine._extract_game_query_from_example(user_input, matched_example or "")
@@ -149,9 +144,15 @@ class IntentHandler:
             self.waiting_name_remove_confirmation = False
             return self._handle_remove_name(label, user_input)
         
-        if not self.explicit_change_flow:
+        if self.explicit_change_flow:
             if label == "introduce_self":
-                return self._handle_introduction(user_input, matched_example)
+                self.explicit_change_flow = False
+                self.waiting_name_confirmation = True
+                return self._explicit_name_change(label, user_input, matched_example)
+            return fallback()
+        
+        if not self.explicit_change_flow and label == "introduce_self":
+            return self._handle_introduction(user_input, matched_example)
 
         if label == "change_name":
             if self.name_given is False:
@@ -161,12 +162,6 @@ class IntentHandler:
         
         if label == "back" and self.explicit_change_flow:
             return self._handle_back_name_flow()
-        
-        if self.explicit_change_flow:
-            if label == "introduce_new_name" or label == "introduce_self":
-                self.explicit_change_flow = False
-                self.waiting_name_confirmation = True
-                return self._explicit_name_change(label, user_input, matched_example)
         
         if label == "remove_name":
             self.waiting_name_remove_confirmation = True
@@ -224,14 +219,14 @@ class IntentHandler:
     def _process_goodbye(self, label: str, user_input: str) -> str:
         """Handle goodbye name-saving decision."""
         if self.name_given:
-            if label == "no_confirm_save_name_goodbye" or user_input == "no":
+            if label == "confirm_negative" or user_input.lower() == "no":
                 save_name_decision(False)
                 reset_name()
                 reset_purchased_game()
                 self.goodbye_process = False
                 return "no_saved_name_and_end"
 
-            if label == "confirm_save_name_goodbye" or user_input == "yes":
+            if label == "confirm_positive" or user_input.lower() == "yes":
                 save_name_decision(True)
                 self.goodbye_process = False
                 return "save_name_and_end"
@@ -270,14 +265,13 @@ class IntentHandler:
     
     def _handle_name_change(self, label: str, user_input: str) -> str:
         """Name changing confirmation."""
-        # text = user_input.strip().lower()
-        if user_input == "yes" or label == "change_name_confirmed":
+        if user_input.lower() == "yes" or label == "confirm_positive":
             self.change_name = False
             self.name_given = True
             save_name(self.new_username)
             self.username = self.new_username
             return name_changed()
-        if user_input == "no" or label == "change_name_not_confirmed":
+        if user_input.lower() == "no" or label == "confirm_negative":
             self.change_name = False
             self.new_name_given = False
             return no_name_change_or_remove()
@@ -295,15 +289,14 @@ class IntentHandler:
             self.pending_new_name = extracted_name
             return confirm_name_change(extracted_name)
         
-        # text = user_input.strip().lower()
-        if user_input == "yes" or label == "change_name_confirmed":
+        if user_input.lower() == "yes" or label == "confirm_positive":
             self.waiting_name_confirmation = False
             self.explicit_change_flow = False
             save_name(self.pending_new_name)
             self.username = self.pending_new_name
             return name_changed()
-
-        if user_input == "no" or label == "change_name_not_confirmed":
+        
+        if user_input.lower() == "no" or label == "confirm_negative":
             self.waiting_name_confirmation = False
             return no_name_change_or_remove()
         
@@ -318,11 +311,11 @@ class IntentHandler:
         # text = user_input.strip().lower()
 
         if self.name_given:
-            if user_input == "yes" or label == "remove_name_confirmed":
+            if user_input.lower() == "yes" or label == "confirm_positive":
                 self.name_given = False
                 reset_name()
                 return name_removed()
-            if user_input == "no" or label == "remove_name_not_confirmed":
+            if user_input.lower() == "no" or label == "confirm_negative":
                 return no_name_change_or_remove()
             return error_name_remove_confirmation()
         return no_name_to_remove()

@@ -75,7 +75,8 @@ PLATFORM_ALIASES = {
 
     # Handheld / Mobile / Special Platforms
     "NGage":   ["ngage", "n-gage"],
-    "AJ":      ["aj"]
+    "AJ":      ["aj"],
+    "iOS":     ["ios"]
 }
 
 GENRE_ALIASES = {
@@ -96,7 +97,7 @@ GENRE_ALIASES = {
     "Sandbox":         ["sandbox", "open world"],
     "Shooter":         ["shooter", "fps", "tps", "first person shooter", "third person shooter"],
     "Simulation":      ["simulation", "sim", "simulator"],
-    "Sports":          ["sports", "sport", "football", "soccer", "basketball", "tennis"],
+    "Sports":          ["sports", "sport"],
     "Strategy":        ["strategy", "tactics", "rts", "turn-based", "turn based"],
     "Visual Novel":    ["visual novel", "vn", "story game"],
 }

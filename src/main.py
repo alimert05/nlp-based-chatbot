@@ -1,4 +1,4 @@
-from intent_handler import IntentHandler
+from intent_handlers.non_game_intents_handler import IntentHandler
 from responses import (fallback, goodbye_saved_name, 
                        goodbye_no_saved_name, ask_name, 
                        greeting_again, goodbye_only)

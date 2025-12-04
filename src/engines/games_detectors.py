@@ -72,7 +72,7 @@ def detect_price_critic_between(user_input: str) -> Tuple[Optional[float], Optio
     """
     numbers = re.findall(r'[+-]?\d*\.?\d+', user_input)
     if len(numbers) < 2:
-        return None
+        return (None, None)
     
     low, high = map(float, numbers[:2])
     if low > high:
@@ -102,7 +102,7 @@ def detect_dates_between(user_input: str) -> Tuple[Optional[int], Optional[int]]
     """
     years = re.findall(r"\b(19[5-9]\d|20[0-4]\d|2050)\b", user_input)
     if len(years) < 2:
-        return None
+        return (None, None)
     
     min, max = map(int, years[:2])
     if min > max:

@@ -71,8 +71,6 @@ def reset_purchased_game(path: str = PURCHASED_GAME_PATH) -> None:
     """Remove the currently purchased game."""
     dump(None, path)
 
-
-
 # Load QA dataset
 def load_qa_data(path: str = QA_PATH) -> Tuple[List[str], List[str]]:
     """
@@ -100,7 +98,7 @@ def load_games_data(path: str = GAMES_PATH) -> Tuple[List[str], List[str], List[
     """
     try:
         df = pd.read_csv(path)
-    except FileExistsError:
+    except FileNotFoundError:
         print("[ERROR] Could not find games_data.csv")
 
     titles = df["title"].astype(str).tolist()

@@ -4,6 +4,7 @@
       "tag": "introduce_self",
       "examples": [
         "my name is",
+        "my new name is",
         "i am",
         "i'm",
         "call me",
@@ -19,24 +20,12 @@
         "i go by",
         "i prefer to be called",
         "let's say my name is",
-        "you may call me"
-      ]
-    },
-    {
-      "tag": "introduce_new_name",
-      "examples": [
-        "my new name is",
-        "it's ",
-        "it is",
-        "its",
+        "you may call me",
         "I want to change it to ",
-        "you can call me ",
-        "please use the name ",
-        "use the name ",
-        "change my name to ",
         "change it to",
-        "my name is",
-        "call me "
+        "change my name to ",
+        "please use the name ",
+        "use the name "
       ]
     },
     {
@@ -191,52 +180,6 @@
       ]
     },
     {
-      "tag": "confirm_save_name_goodbye",
-      "examples": [
-        "yes save it",
-        "i confirm",
-        "yes please save it",
-        "yeah save it",
-        "sure save my name",
-        "yes go ahead",
-        "okay save it",
-        "ok save it",
-        "save my name",
-        "confirm",
-        "i confirm saving my name",
-        "that's fine save it",
-        "yes keep my name",
-        "yes you can save it",
-        "yep save it",
-        "yes please",
-        "yes do it",
-        "sounds good save it"
-      ]
-    },
-    {
-      "tag": "no_confirm_save_name_goodbye",
-      "examples": [
-        "i don't confirm",
-        "i dont confirm",
-        "no don't save it",
-        "no dont save it",
-        "don't save my name",
-        "dont save my name",
-        "no please don't save it",
-        "i don't want you to save it",
-        "i dont want you to save it",
-        "no thanks",
-        "no thanks don't save it",
-        "leave it unsaved",
-        "no do not save it",
-        "never mind don't save it",
-        "nope don't save it",
-        "don't keep it",
-        "dont keep my name",
-        "no i don't want that"
-      ]
-    },
-    {
       "tag": "games_list",
       "examples": [
         "what games do you have",
@@ -250,7 +193,9 @@
         "what games can I choose from",
         "give me a list of games",
         "suggest me some games",
-        "what games do you offer"
+        "what games do you offer",
+        "recommend some games",
+        "recommend me some games"
       ]
     },
     {
@@ -296,14 +241,14 @@
     {
       "tag": "games_search_by_genre",
       "examples": [
-        "list all genres",
-        "what genres do you have",
-        "which genres are available",
-        "what kinds of games do you have",
-        "show me all genres",
-        "what game genres can I browse",
-        "which game categories are there",
-        "what types of games do you support"
+        "show me  games",
+        "list  games",
+        "find  games",
+        "do you have any  games",
+        "i want  games",
+        "i'm looking for  games",
+        "can you show me some ",
+        "i want some  games"
       ]
     },
     {
@@ -323,8 +268,14 @@
     {
       "tag": "explore_genres",
       "examples": [
+        "list all genres",
         "what genres do you have",
-        "list all genres"
+        "which genres are available",
+        "what kinds of games do you have",
+        "show me all genres",
+        "what game genres can I browse",
+        "which game categories are there",
+        "what types of games do you support"
       ]
     },
     {
@@ -702,36 +653,6 @@
       ]
     },
     {
-      "tag": "confirm_order_positive",
-      "examples": [
-        "confirm my order",
-        "yeah",
-        "yep",
-        "sure",
-        "ok confirm",
-        "go ahead",
-        "yes please",
-        "that sounds good",
-        "i confirm",
-        "let's do it",
-        "okay buy it"
-      ]
-    },
-    {
-      "tag": "confirm_order_negative",
-      "examples": [
-        "nah",
-        "nope",
-        "actually no",
-        "i changed my mind",
-        "don't confirm",
-        "cancel this",
-        "forget it",
-        "i don't want it",
-        "leave it"
-      ]
-    },
-    {
       "tag": "purchase_history",
       "examples": [
         "what did I bought",
@@ -797,7 +718,7 @@
     "may I change my name",
     "can I change my name",
     "let me change my name",
-    "I’d like to change my name",
+    "I'd like to change my name",
     "I feel like changing my name",
     "I want to update my name",
     "please change my name",
@@ -813,55 +734,6 @@
     "I want my name to be different",
     "I'd like to switch my name",
     "please let me use another name"
-  ]
-  },
-  {
-    "tag": "change_name_confirmed",
-    "examples": [
-    "yes change it",
-    "yeah change it",
-    "yes please change it",
-    "okay change it",
-    "ok change it",
-    "sure change my name",
-    "i confirm",
-    "i confirm the name change",
-    "yes i want to change it",
-    "yes i want that",
-    "do it",
-    "go ahead",
-    "go ahead change it",
-    "yes go ahead",
-    "yep change it",
-    "alright change it",
-    "change it please",
-    "yes that's fine"
-    ]
-  },
-  {
-  "tag": "change_name_not_confirmed",
-  "examples": [
-    "no don't change it",
-    "no dont change it",
-    "no keep it the same",
-    "no keep my current name",
-    "no leave it",
-    "i don't want to change it",
-    "i dont want to change it",
-    "i don't confirm",
-    "i dont confirm",
-    "no i don't confirm",
-    "no i dont confirm",
-    "no thanks",
-    "no thank you",
-    "stop",
-    "cancel",
-    "forget it",
-    "never mind",
-    "nah leave it",
-    "no please don't",
-    "don't change my name",
-    "dont change my name"
   ]
   },
   {
@@ -890,8 +762,42 @@
   ]
 },
 {
-  "tag": "remove_name_confirmed",
+  "tag": "confirm_positive",
   "examples": [
+    "yes",
+    "yeah",
+    "yep",
+    "yup",
+    "sure",
+    "ok",
+    "okay",
+    "alright",
+    "yes please",
+    "yes do it",
+    "go ahead",
+    "go ahead change it",
+    "go ahead remove it",
+    "do it",
+    "sounds good",
+    "that sounds good",
+    "i confirm",
+    "i confirm the name change",
+    "i confirm my order",
+    "yes change it",
+    "yes please change it",
+    "okay change it",
+    "yes i want that",
+    "yes save it",
+    "yes please save it",
+    "yeah save it",
+    "sure save my name",
+    "save my name",
+    "yes keep my name",
+    "okay save it",
+    "confirm my order",
+    "ok confirm",
+    "let's do it",
+    "okay buy it",
     "yes remove it",
     "yes delete it",
     "remove it",
@@ -904,35 +810,49 @@
     "okay remove it",
     "ok delete it",
     "alright remove it",
-    "i confirm remove it",
-    "go ahead remove it",
-    "confirm remove",
-    "yes that's fine",
-    "yes do it"
+    "yes that's fine"
   ]
 },
 {
-  "tag": "remove_name_not_confirmed",
+  "tag": "confirm_negative",
   "examples": [
+    "no",
+    "nope",
+    "nah",
+    "actually no",
+    "no thanks",
+    "no thank you",
+    "i changed my mind",
+    "don't confirm",
+    "cancel this",
+    "cancel",
+    "stop",
+    "forget it",
+    "never mind",
+    "never mind don't save it",
+    "i don't want it",
+    "leave it",
+    "leave it unsaved",
+    "no don't change it",
+    "no keep it the same",
+    "no keep my current name",
+    "no leave it",
+    "i don't want to change it",
     "no don't remove it",
-    "no dont remove it",
     "no keep it",
     "keep my name",
     "keep it the same",
     "keep my saved name",
     "don't delete it",
-    "dont delete it",
-    "no i want to keep it",
-    "leave it",
-    "leave my name",
-    "no thanks",
-    "nah",
-    "stop",
-    "cancel",
-    "never mind",
-    "forget it"
+    "no don't save it",
+    "don't save my name",
+    "no please don't save it",
+    "i don't want you to save it",
+    "no do not save it",
+    "nope don't save it",
+    "don't keep it",
+    "no i don't want that"
   ]
 }
-
   ]
 }
