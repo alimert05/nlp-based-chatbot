@@ -122,7 +122,7 @@ def support() -> str:
         "2) If that game is on multiple platforms, I'll show the platforms and prices so you can choose.\n"
         "3) Confirm your choice and price, and ask you to answer with 'yes', 'no', or 'back'.\n"
         "\n🔁 Changing your mind\n"
-        "- You can type 'back' during anything to go one step up.\n"
+        "- You can type 'back' during any multi-turn conversation to go one step up.\n"
         "- You can say 'I don't want games' if you'd like to stop talking about games.\n"
         "\nJust ask in your own words, and I'll do my best to understand what you want next, "
         f"{user_name.value}.\n"
@@ -161,7 +161,6 @@ def prompt_again(matched_example) -> str:
 
 def fallback() -> str:
     return f"Bot: I'm not sure I understand that, {user_name.value}. You can say something like 'what can you do?' to see your options."
-
 
 # ===== GAME MODE RESPONSES =====
 def no_game_found():
@@ -262,7 +261,6 @@ def games_by_name(titles: List[str], platforms: List[str], genres: List[str], pu
     result = "\n".join(lines)
     return f"Bot: {user_name.value}, here are the games I found that match your search:\n\n{result}"
 
-
 # ======= PUBLISHER / DEVELOPER LISTING =======
 
 def games_by_entity(entity_type: str, titles: List[str], entities: List[str]) -> str:
@@ -294,7 +292,6 @@ def error_publisher_not_detected() -> str:
 
 def error_developer_not_detected() -> str:
     return "Bot: I couldn't recognise that developer. Try something like 'games made by Naughty Dog'."
-
 
 # ======= PLATFORM / GENRE LISTING =======
 def games_list_platforms(platforms: List[str]) -> str:
@@ -349,8 +346,6 @@ def error_platform_not_detected() -> str:
 
 def error_genre_not_detected() -> str:
     return f"Bot: I didn't catch which genre you meant, {user_name.value}. Try another genre or type 'help'."
-
-
 
 # ======== PRICE FILTER RESPONSES ========
 def games_cheapest(price: float,

@@ -93,7 +93,7 @@ GENRE_ALIASES = {
     "Platform":        ["platformer", "platform"],
     "Puzzle":          ["puzzle", "brain", "logic"],
     "Racing":          ["racing", "driving", "car game"],
-    "Role-Playing":    ["rpg", "role-playing", "role playing", "jrpg"],
+    "Role-Playing":    ["rpg", "role-playing", "role playing"],
     "Sandbox":         ["sandbox", "open world"],
     "Shooter":         ["shooter", "fps", "tps", "first person shooter", "third person shooter"],
     "Simulation":      ["simulation", "sim", "simulator"],

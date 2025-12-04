@@ -71,7 +71,6 @@
         "yo",
         "hi bot",
         "hello there",
-        "hiya",
         "hey, how's it going",
         "hey, bot",
         "hi again"
@@ -764,7 +763,6 @@
 {
   "tag": "confirm_positive",
   "examples": [
-    "yes",
     "yeah",
     "yep",
     "yup",
@@ -816,7 +814,6 @@
 {
   "tag": "confirm_negative",
   "examples": [
-    "no",
     "nope",
     "nah",
     "actually no",

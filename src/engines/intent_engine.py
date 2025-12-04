@@ -25,7 +25,7 @@ class IntentEngine:
         self.high_confidence_intents = (
             high_confidence_intents
             if high_confidence_intents is not None
-            else {"greet", "discover", "small_talk"}
+            else {"greet", "small_talk"}
         )
 
         # Load intents JSON

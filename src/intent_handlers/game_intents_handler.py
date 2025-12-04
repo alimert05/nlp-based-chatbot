@@ -25,23 +25,27 @@ class GamesHandler:
     def __init__(self):
         self.games_engine = GamesEngine()
 
-        # Game mode & purchased flow
-        self.only_one_platform = False
-        self.only_one_game = False
-        self.choose_game_name_mode = False
-        self.choose_platform_mode = False
-        self.buying_process = False
+        # Game mode & purchased flow state flags
+        self.only_one_platform = False # True if selected game has exactly one platform
+        self.only_one_game = False # True if search result has exactly one game
+        self.choose_game_name_mode = False # True when user is choosing a game from a numbered list
+        self.choose_platform_mode = False # True when user is choosing a platform from a numbered list
+        self.buying_process = False # True when use is in any step of the buying flow
         
+        # Current selections / context
         self.selected_game_title: Optional[str] = None
         self.current_platform_choice: Optional[str] = None
         self.current_price_choice: Optional[float] = None
         self.game_query: Optional[str] = None
-        self.buy_candidates: list[dict] = []
-        self.current_platforms: list[str] = []
-        self.current_prices: list[float] = []
+        self.buy_candidates: list[dict] = [] # List of candidate games 
+        self.current_platforms: list[str] = [] # Platforms for currently selected game
+        self.current_prices: list[float] = [] # Prices aligned with current_platforms
 
     def is_game_intent(self, label: str) -> bool:
-            """Return True if this intent should be handled inside game mode."""
+            """Return True if this intent should be handled inside game mode."""            
+            if label == "quit":
+                return False
+            
             game_intents = {
                 "dont_want_games",
                 "games_list",
@@ -144,6 +148,7 @@ class GamesHandler:
         if self.buying_process:
             return self._handle_buy_confirmation(label, user_input)
 
+        # Fallback if nothing else matches
         return fallback()
 
     # Resets all flags related to buying process
@@ -162,7 +167,10 @@ class GamesHandler:
 
     # Purchase History Handling
     def _handle_purchase_history(self) -> str:
-        """Handle purchase history request"""
+        """
+        Returns the user's last purchased game if it is exists,
+        otherwise respond that there is no purchase history.
+        """
         title, platform, price = load_purchased_game()
         if not title or not platform or not price:
             return no_purchase_history()
@@ -173,9 +181,13 @@ class GamesHandler:
         reset_purchased_game()
         return purchase_history_deleted()
 
-    # Buy Flow: Selection
+    # Buy Flow: Selection (game / platform)
     def _handle_selection_process(self, user_input: str) -> str:
-        """Handle game and platform selection"""
+        """
+        Handle game and platform selection by number during the buy process.
+        - If choose_game_mode: map selection to a candidate game.
+        - If choose_platform_mode: map selection to a platform/price for the chosen game.
+        """
         selected_id = detect_selection(user_input)
 
         # Choose game by number
@@ -187,6 +199,8 @@ class GamesHandler:
             title = selected["title"]
             platforms = selected["platforms"]
             prices = selected["prices"]
+
+            # Move from game selection to platform selection stage
             self.choose_game_name_mode = False
             self.current_platforms = platforms
             self.current_prices = prices
@@ -213,6 +227,7 @@ class GamesHandler:
             price = self.current_prices[selected_id - 1]
             title = self.selected_game_title or "that game"
 
+            # Move to confirmation stage
             self.choose_platform_mode = False
             self.current_platform_choice = platform
             self.current_price_choice = price
@@ -220,7 +235,13 @@ class GamesHandler:
             return confirm_order(title, platform, price)
         
     def _handle_back_in_buy_process(self):
-        """Handle 'back' command at different stages of the buy process."""
+        """
+        Handle 'back' during the buy process.
+        Depending on where the user is:
+        - From game selection stage -> exit buy flow
+        - From platform selection stage -> go back to game selection list
+        - From confirmation stage -> go back to platform selection list
+        """
         # 1. At game selection stage
         if self.choose_game_name_mode:
             self._reset_buying_state()
@@ -237,12 +258,12 @@ class GamesHandler:
             self.current_price_choice = None
             return ask_game_disambiguation(self.buy_candidates)
     
-        # 3. At confirmation stage
+        # 3. At confirmation stage with a single game + single platform
         if self.only_one_game and self.only_one_platform:
             self._reset_buying_state()
             return back_from_game_selection()
 
-
+        # 4. At confirmation stage with single platform but multiple games
         if self.only_one_platform:
             self.choose_game_name_mode = True
             self.selected_game_title = None
@@ -250,6 +271,7 @@ class GamesHandler:
             self.current_price_choice = None
             return ask_game_disambiguation(self.buy_candidates)
 
+        # 5. At confirmation stage with multiple platforms
         self.choose_platform_mode = True
         self.current_platform_choice = None
         self.current_price_choice = None
@@ -261,7 +283,10 @@ class GamesHandler:
 
     # Filter Handling
     def _handle_filters(self, label: str, user_input: str) -> Optional[str]:
-        """Handle all game filtering operations"""
+        """
+        Handle all game filtering operations (platform, genre, price, score, date).
+        Returns a response string if filter handled, otherwise None.
+        """
         if label == "games_search_by_platform":
             platform = detect_platform(user_input)
             if platform is None:
@@ -436,7 +461,14 @@ class GamesHandler:
 
     # Buy Flow: Candidates & Confirmation
     def _handle_buy_process(self, titles, platforms, prices) -> str:
-        """Handle buy process initiation: build candidates and decide next step"""
+        """
+        Start the buy process:
+        - Merge rows by title (collect platforms + prices per title)
+        - Decide whether to:
+            - confirm directly (1 game, 1 platform)
+            - ask platform (1 game, multiple platforms)
+            - or ask which game (multiple titles)
+        """
         self.buying_process = True
 
         if not titles:
@@ -487,7 +519,11 @@ class GamesHandler:
         return ask_game_disambiguation(candidates)
 
     def _handle_buy_confirmation(self, label: str, user_input: str) -> str:
-        """Handle buy confirmation (positive/negative)"""
+        """
+        Handle final purchase confirmation:
+        - yes / confirm_positive -> purchase completed and saved to history
+        - no / confirm_negative -> cancel purchase
+        """
         if user_input.lower() == "no" or label == "confirm_negative":
             self._reset_buying_state()
             return game_not_purchased()

@@ -20,10 +20,26 @@ from responses import (
 from intent_handlers.game_intents_handler import GamesHandler
 
 class IntentHandler:
+    """
+    Top-level intent router / state machine.
+
+    Responsibilities:
+    - Route user input between:
+        * game flow (GamesHandler)
+        * QA flow (course Q&A)
+        * name handling (introduce / change / remove)
+        * small talk and emotional follow-ups
+        * goodbye / end-session flow
+    - Maintain cross-turn state such as:
+        * whether the user gave their name
+        * explicit name change flow
+        * goodbye flow (save name or not)
+        * small-talk follow-up (positive/negative)
+    """
     
     def __init__(self, intent_path: str = config.INTENTS_PATH) -> None:
     
-        # Thresholds
+        # Confidence thresholds
         self.qa_threshold = 0.45
         self.qa_bonus = 0.05
         self.games_threshold = 0.40
@@ -46,12 +62,13 @@ class IntentHandler:
 
     # State Initialisation
     def _init_state(self):
+        """Initialise all per-session state variables"""
+        # For small-talk follow-up (positive/negative feelings)
         self.wait_user_input = False
 
-        # Name handling
-        self.name_refused = False
-        self.change_name = False
-        self.new_name_given = False
+        # Name handling (implicit flow)
+        self.name_refused = False # True if user refused to give name earlier
+        self.change_name = False # True if user is in simple yes/no name change confirmation
         self.normalised_name = Optional[str] 
         self.extracted_name = Optional[str]
 
@@ -62,10 +79,12 @@ class IntentHandler:
         self.waiting_name_remove_confirmation = False
 
         # Name decision handling (persistent)
-        self.decision = load_name_decision()
-        self.username = load_name()
-        self.new_username = None
+        self.decision = load_name_decision() # True / False / None
+        self.username = load_name() # Stored username if any
+        self.new_username = None # For simple name-change flow
         self.name_given = True if self.decision is True else False
+
+        # Goodbye / greeting flow
         self.goodbye_process = False
         self.goodbye_error = False
         self.greeting_process = False
@@ -76,7 +95,17 @@ class IntentHandler:
 
     # Main Dispatch
     def handle_intent(self, user_input: str) -> Optional[str]:
-        """Main intent handling logic"""
+        """
+        Main intent handling logic
+
+        Steps:
+        1. Clean input and detect top-level intent
+        2. Run QA engine for potential knowledge-based answers
+        3. Route to:
+            - games handler,
+            - purchase history,
+            - or non-game intent handler.
+        """
         # Get intent match
         user_input = self._clean_user_input(user_input)
         label, intent_score, matched_example = self.intent_engine.match(user_input)
@@ -113,7 +142,13 @@ class IntentHandler:
     # Non-game Intents
     def _handle_non_game_mode(self, label: str, user_input: str, matched_example: str, 
                              intent_score: float) -> str:
-        """Handle all non-game mode intents"""
+        """
+        handle all non-game intents:
+        - greeting / discover / small talk
+        - name introduction / recall / change / remove 
+        - goodbye flow and name-saving decision
+        - low-confidence fallback
+        """
 
         # User refuses to give name
         if self.name_given is False and self.name_refused is False:
@@ -132,37 +167,55 @@ class IntentHandler:
         if self._handle_goodbye_process(label):
             return self._process_goodbye(label, user_input)
         
-         # Name handling
-        if self.waiting_name_confirmation:
+        # --- Explicit name-change flow ---
+        # Step 0: user starts the flow
+        if label == "change_name":
+            if not self.name_given:
+                return no_name_to_change()
+            # We are now in the explicit change-name flow
+            self.explicit_change_flow = True
             self.waiting_name_confirmation = False
-            return self._explicit_name_change(label, user_input, None)
+            self.pending_new_name = None
+            return ask_new_name()  # "Tell me your new name or type 'back'."
+
+        # Step 1 & 2: we are already in the explicit change-name flow
+        if self.explicit_change_flow:
+            # User wants to cancel at any point
+            if label == "back":
+                return self._handle_back_name_flow()
+
+            # If we are currently waiting for YES/NO confirmation
+            if self.waiting_name_confirmation:
+                # Let _explicit_name_change handle yes/no/invalid
+                return self._explicit_name_change(label, user_input, None)
+
+            # Otherwise, we are waiting for the NEW NAME itself
+            if label == "introduce_self":
+                # User is giving their new name sentence
+                return self._explicit_name_change(label, user_input, matched_example)
+
+            # Anything else here means: user didn't give a name,
+            # so remind them what to do.
+            return ask_new_name()
         
+        # Simple name-change flow (not explicit multi-step)
         if self.change_name:
             return self._handle_name_change(label, user_input)
         
+        # Remove-name confirmation flow
         if self.waiting_name_remove_confirmation:
             self.waiting_name_remove_confirmation = False
             return self._handle_remove_name(label, user_input)
         
-        if self.explicit_change_flow:
-            if label == "introduce_self":
-                self.explicit_change_flow = False
-                self.waiting_name_confirmation = True
-                return self._explicit_name_change(label, user_input, matched_example)
-            return fallback()
-        
+        # Normal introduction (when user not in explicit change flow)
         if not self.explicit_change_flow and label == "introduce_self":
             return self._handle_introduction(user_input, matched_example)
-
-        if label == "change_name":
-            if self.name_given is False:
-                return no_name_to_change()
-            self.explicit_change_flow = True
-            return ask_new_name()
         
+        # Back from explicit-change flow 
         if label == "back" and self.explicit_change_flow:
             return self._handle_back_name_flow()
         
+        # Start remove-name confirmation flow
         if label == "remove_name":
             self.waiting_name_remove_confirmation = True
             return ask_remove_name()
@@ -204,20 +257,33 @@ class IntentHandler:
             return fallback()
         
         if self.low_confidence <= intent_score < self.high_confidence:
+            # Ask user to rephrase
             return prompt_again(matched_example)
-            
+        
+        # No specific handler above -> generic fallback
         self.wait_user_input = False
         return fallback()
 
     # Goodbye / End Session
     def _handle_goodbye_process(self, label: str) -> bool:
-        """Mark that we are in the goodbye process if user wants to quit."""
+        """
+        Mark that we are in the goodbye process if user wants to quit
+         - Resets any active game buying state so that the session can end cleanly.
+        """
         if label == "quit":
+            self.game_handler._reset_buying_state()
             self.goodbye_process = True
         return self.goodbye_process
 
     def _process_goodbye(self, label: str, user_input: str) -> str:
-        """Handle goodbye name-saving decision."""
+        """
+        Handle goodbye flow where the bot asks:
+        - whether to save the user's name for next time.
+
+        Returns: 
+        - "save_name_and_end" or "no_saved_name_and_end" control tokens
+        - or "end" if no name is known
+        """
         if self.name_given:
             if label == "confirm_negative" or user_input.lower() == "no":
                 save_name_decision(False)
@@ -231,24 +297,36 @@ class IntentHandler:
                 self.goodbye_process = False
                 return "save_name_and_end"
             
+            # If no clear response 
             if self.goodbye_error:
                 return error_ask_save_name()
             self.goodbye_error = True
             return ask_save_name()
 
+        # If there is no name stored, just end the conversation
         return "end"
     
     def _handle_back_goodbye_process(self) -> str:
+        """
+        Handle 'back' inside the goodbye flow:
+        - Cancel goodbye and go back to normal mode.
+        """
         self.goodbye_process = False
         self.goodbye_error = False
         return back_from_goodbye()
 
     # Name Handling
     def _handle_introduction(self, user_input: str, matched_example: str) -> str:
-        """Handle user introduction and name changing."""
+        """
+        Handle user introduction and name changing in the simple flow:
+        - If no name known -> store new name.
+        - If same as stored name -> respond with 'I already know your name'.
+        - If different -> ask user if they want to change to the new name.
+        """
         normalised_input = self.name_recogniser.normalise_intro(user_input, matched_example)
         extracted_name = self.name_recogniser.extract_name(normalised_input)
         
+        # First time giving name
         if self.name_given is False:
             if extracted_name:
                 self.name_given = True
@@ -257,14 +335,21 @@ class IntentHandler:
                 return greeting(extracted_name)
             return ask_name_again()
         
+        # Name already known and user repeats the same
         if extracted_name.lower() == str(self.username).lower():
             return name_known()
+        
+        # Different name -> enter simple confirmation flow
         self.change_name = True
         self.new_username = extracted_name
         return name_already_given(self.new_username)
     
     def _handle_name_change(self, label: str, user_input: str) -> str:
-        """Name changing confirmation."""
+        """
+        Simple name-change confirmation:
+        - 'yes' / confirmation positive -> save new username
+        - 'no' / confirmation_negative -> keep old name
+        """
         if user_input.lower() == "yes" or label == "confirm_positive":
             self.change_name = False
             self.name_given = True
@@ -273,46 +358,79 @@ class IntentHandler:
             return name_changed()
         if user_input.lower() == "no" or label == "confirm_negative":
             self.change_name = False
-            self.new_name_given = False
             return no_name_change_or_remove()
         return error_name_change_confirmation()
     
     def _explicit_name_change(self, label: str, user_input: str, matched_example: Optional[str]) -> str:
-        """Handle explicit name change logic."""
-        if self.waiting_name_confirmation:
+        """Handle explicit name change logic.
+
+        Two phases:
+        1) Not waiting_name_confirmation -> expecting the NEW NAME.
+        2) waiting_name_confirmation -> expecting YES/NO to confirm the new name.
+        """
+        text = user_input.strip().lower()
+
+        # --- PHASE 1: expecting the NEW NAME ---
+        if not self.waiting_name_confirmation:
             normalised_input = self.name_recogniser.normalise_intro(user_input, matched_example)
             extracted_name = self.name_recogniser.extract_name(normalised_input)
-            if extracted_name.lower() == str(self.username).lower():
-                self.waiting_name_confirmation = False
-                self.explicit_change_flow = True
+
+            # No name detected -> ask again
+            if not extracted_name:
+                # Message should tell user: "Please tell me your new name or type 'back'."
+                return ask_new_name()
+
+            # If the new name is the same as old one
+            if self.username and extracted_name.lower() == str(self.username).lower():
+                # Stay in the explicit_change_flow but do NOT move to confirmation
                 return same_as_old_name()
+
+            # Store new name and move to confirmation phase
             self.pending_new_name = extracted_name
+            self.waiting_name_confirmation = True
             return confirm_name_change(extracted_name)
-        
-        if user_input.lower() == "yes" or label == "confirm_positive":
+
+        # --- PHASE 2: expecting YES / NO confirmation ---
+        if text == "yes" or label == "confirm_positive":
+            # User confirmed the new name
             self.waiting_name_confirmation = False
             self.explicit_change_flow = False
-            save_name(self.pending_new_name)
-            self.username = self.pending_new_name
+            if self.pending_new_name:
+                save_name(self.pending_new_name)
+                self.username = self.pending_new_name
             return name_changed()
-        
-        if user_input.lower() == "no" or label == "confirm_negative":
+
+        if text == "no" or label == "confirm_negative":
+            # User rejected the change -> do nothing and exit flow
             self.waiting_name_confirmation = False
+            self.explicit_change_flow = False
+            self.pending_new_name = None
             return no_name_change_or_remove()
-        
-        return error_name_change_confirmation()
+
+        # If user types "back" here, we handle it outside via _handle_back_name_flow,
+        # so reaching here means: not yes / not no / not back.
+        # Ask them again to confirm or type back.
+        return error_name_change_confirmation()  # e.g. "Please say yes, no, or 'back' to cancel."
     
     def _handle_back_name_flow(self) -> str:
+        """Cancel the explicit name-change flow and go back to normal.
+        Resets explicit_change_flow and pending_new_name so user can start over
+        """
         self.explicit_change_flow = False
+        self.waiting_name_confirmation = False
+        self.pending_new_name = None
         return back_from_name_change()
     
     def _handle_remove_name(self, label: str, user_input: str) -> str:
-        """Handle user wants to remove their name."""
-        # text = user_input.strip().lower()
-
+        """
+        Handle user confirmation when they want to remove their stored name:
+        - 'yes' / confirm_positive -> remove name and clear decision
+        - 'no' / confirm_negative  -> keep name
+        """
         if self.name_given:
             if user_input.lower() == "yes" or label == "confirm_positive":
                 self.name_given = False
+                save_name_decision(False)
                 reset_name()
                 return name_removed()
             if user_input.lower() == "no" or label == "confirm_negative":
