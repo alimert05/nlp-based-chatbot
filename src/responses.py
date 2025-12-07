@@ -155,9 +155,10 @@ def goodbye_only() -> str:
 def back_from_goodbye() -> str:
     return f"Bot: Sure, how can I help you {user_name.value}?"
 
-def prompt_again(matched_example) -> str:
+def prompt_again(matched_example: Optional[str]) -> str:
     pretty_example = matched_example.replace('_', ' ')
-    return f"Bot: {user_name.value}, I think you might trying to say: '{[pretty_example]}'.\n If that's not what you meant, you can type 'help' to see what I can do." 
+    return f"Bot: I think you might trying to say: '{pretty_example}'. If that's not what you meant, you can type 'help' to see what I can do." 
+
 
 def fallback() -> str:
     return f"Bot: I'm not sure I understand that, {user_name.value}. You can say something like 'what can you do?' to see your options."

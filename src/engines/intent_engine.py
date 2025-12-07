@@ -75,6 +75,6 @@ class IntentEngine:
         best_example = self.example_texts[best_idx]
 
         if best_score < self.threshold:
-            return None, best_score, None
+            return None, best_score, best_example
 
         return best_label, best_score, best_example

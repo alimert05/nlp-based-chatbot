@@ -7,7 +7,7 @@ from responses import fallback
 NAME_WORD = r"[A-Za-zÀ-ÖØ-öø-ÿ]+(?:[-'][A-Za-zÀ-ÖØ-öø-ÿ]+)?"
 
 # A name phrase: 1-3 words
-NAME_PHRASE = rf"{NAME_WORD}(?:\s+{NAME_WORD}){{0,2}}"
+NAME_PHRASE = rf"{NAME_WORD}(?:\s+{NAME_WORD}){{0,4}}"
 
 # All intro phrases from introduce_self + introduce_new_name
 INTRO_PHRASES = (
@@ -39,18 +39,14 @@ INTRO_PHRASES = (
     r"it is|it's|its"
 )
 
-# Pattern 1: full sentence with an intro phrase, then a name, stopping at punctuation/comma
-PATTERN1 = re.compile(
+# Pattern: full sentence with an intro phrase, then a name, stopping at punctuation/comma
+PATTERN = re.compile(
     rf"^(?:\s*(?:hi|hello|hey)\s*,?\s*)?"        # optional greeting
     rf"(?:{INTRO_PHRASES})\s+"                   # one of the intro phrases
     rf"({NAME_PHRASE})"                          # the actual name
     r"(?=\s*(?:[,.!?;:]|$))",                    # stop before comma/punctuation or end
     re.IGNORECASE,
 )
-
-# Pattern 2: only name
-PATTERN2 = re.compile(rf"^\s*({NAME_PHRASE})\s*$", re.IGNORECASE)
-
 
 class NameRecogniser:
     """
@@ -66,14 +62,8 @@ class NameRecogniser:
         """
         self.user_input = user_input.strip()
         
-        # First, try to match an intro-style pattern
-        m = PATTERN1.search(self.user_input)
-        if m:
-            self.name = " ".join(w.capitalize() for w in m.group(1).split())
-            return self.name
-        
-        # Next try just the name (1–3 tokens)
-        m = PATTERN2.match(self.user_input)
+        # Try to match an intro-style pattern
+        m = PATTERN.search(self.user_input)
         if m:
             self.name = " ".join(w.capitalize() for w in m.group(1).split())
             return self.name

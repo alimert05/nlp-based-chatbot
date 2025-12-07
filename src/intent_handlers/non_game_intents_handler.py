@@ -40,11 +40,8 @@ class IntentHandler:
     def __init__(self, intent_path: str = config.INTENTS_PATH) -> None:
     
         # Confidence thresholds
-        self.qa_threshold = 0.45
-        self.qa_bonus = 0.05
-        self.games_threshold = 0.40
         self.high_confidence = 0.70
-        self.low_confidence = 0.45
+        self.low_confidence = 0.40
 
         # Engines
         self.name_recogniser = NameRecogniser()
@@ -52,7 +49,7 @@ class IntentHandler:
         self.games_engine = GamesEngine()
         self.intent_engine = IntentEngine(
             intent_path=intent_path,
-            threshold=0.55,
+            threshold=0.50,
             high_confidence_intents={"greet", "discover", "small_talk"},
         )
         self.game_handler = GamesHandler()
@@ -121,9 +118,8 @@ class IntentHandler:
             return self.game_handler.handle_game_intent(label, user_input, game_query)
             
         # QA engine queries (non-game mode only)
-        if qa_score >= self.qa_threshold:
-            if label is None or qa_score + self.qa_bonus > intent_score:
-                return self._handle_qa_answer(answer, document, best_idx)
+        if qa_score > intent_score:
+            return self._handle_qa_answer(answer, document, best_idx)
         
         # Purchase history
         if label == "purchase_history":
@@ -135,6 +131,14 @@ class IntentHandler:
         # Game intents
         if self.game_handler.is_game_intent(label):
             return self.game_handler.handle_game_intent(label, user_input, game_query)
+        
+        if self.low_confidence <= intent_score < self.high_confidence:
+            # Ask user to rephrase
+            return prompt_again(matched_example)
+        
+        # Low confidence handling
+        if label is None:
+            return fallback()
         
         # Non-game mode intents
         return self._handle_non_game_mode(label, user_input, matched_example, intent_score)
@@ -252,17 +256,9 @@ class IntentHandler:
                 return user_feeling_negative()
             return fallback()
         
-        # Low confidence handling
-        if label is None or intent_score < self.low_confidence:
-            return fallback()
-        
-        if self.low_confidence <= intent_score < self.high_confidence:
-            # Ask user to rephrase
-            return prompt_again(matched_example)
-        
         # No specific handler above -> generic fallback
         self.wait_user_input = False
-        return fallback()
+        # return fallback()
 
     # Goodbye / End Session
     def _handle_goodbye_process(self, label: str) -> bool:

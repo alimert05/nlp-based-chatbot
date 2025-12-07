@@ -763,6 +763,7 @@
 {
   "tag": "confirm_positive",
   "examples": [
+    "yes",
     "yeah",
     "yep",
     "yup",
@@ -814,6 +815,7 @@
 {
   "tag": "confirm_negative",
   "examples": [
+    "no",
     "nope",
     "nah",
     "actually no",
