@@ -53,7 +53,7 @@ def name_removed() -> str:
     return "Bot: I've successfully removed your name."
 
 def no_name_to_remove() -> str:
-    return "Bot: I can't remove your name because you haven’t provided one yet."
+    return "Bot: I can't remove your name because you haven't provided one yet."
 
 def no_name_to_change() -> str:
     return "Bot: You haven't provided your name yet. Would you like to tell me, so I can address you properly?"
@@ -159,6 +159,8 @@ def prompt_again(matched_example: Optional[str]) -> str:
     pretty_example = matched_example.replace('_', ' ')
     return f"Bot: I think you might trying to say: '{pretty_example}'. If that's not what you meant, you can type 'help' to see what I can do." 
 
+def unrelated_prompt() -> str:
+    return "Bot: I think you are trying to do something else. How can I help you?"
 
 def fallback() -> str:
     return f"Bot: I'm not sure I understand that, {user_name.value}. You can say something like 'what can you do?' to see your options."
@@ -215,7 +217,7 @@ def purchase_history(title: str, platform: str, price: float) -> str:
     return f"Bot: {user_name.value}, you previously bought {title} ({platform}) for £{price:.2f}."
 
 def purchase_history_deleted() -> str:
-    return "Bot: I've successfully delete your purchase history."
+    return "Bot: I've successfully deleted your purchase history."
 
 def no_purchase_history() -> str:
     return "Bot: You haven't purchased any games yet."

@@ -12,10 +12,9 @@ class QaEngine:
         - Build a TF-IDF matrix for the questions
         - Compute similarity between user input and known questions
         - Return:
-            - all games
             - best match similarity score
             - full question list
-            - full document list
+            - full answer list
             - index of best match
         
         Note: 

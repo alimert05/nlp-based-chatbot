@@ -646,7 +646,7 @@
         "i want to purchase",
         "i'd like to buy game",
         "i want to buy that one",
-        "i'm ready to buy",
+        "i'm ready to buy ",
         "can we buy this game",
         "let's buy this"
       ]
@@ -669,7 +669,9 @@
       "examples": [
         "delete my purchase history",
         "remove all item in my purchase history",
-        "reset my purchase history"
+        "reset my purchase history",
+        "clear my purchase history",
+        "remove my purchase history"
       ]
     },
     {

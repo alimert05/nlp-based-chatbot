@@ -537,3 +537,4 @@ class GamesHandler:
             return game_purchased(title, platform, price)
         
         return error_confirm_oder()
+    
