@@ -854,6 +854,23 @@
     "don't keep it",
     "no i don't want that"
   ]
+},
+{
+  "tag": "search_history",
+  "examples": [
+    "show my search history",
+    "what did I search",
+    "my searches",
+    "search history"
+  ]
+},
+{
+  "tag": "delete_search_history",
+  "examples": [
+    "delete my search history",
+    "clear search history",
+    "reset search history"
+  ]
 }
   ]
 }

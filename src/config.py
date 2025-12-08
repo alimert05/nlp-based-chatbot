@@ -23,6 +23,9 @@ USERNAME_DECISION_PATH = PROJECT_ROOT / "data" / "joblib" / "user_name_decision.
 # Stores details about the last purchased game (title, platform, price)
 PURCHASED_GAME_PATH = PROJECT_ROOT / "data" / "joblib" /  "purchased_game.joblib"
 
+# Stores search history
+SEARCH_HISTORY_PATH = PROJECT_ROOT / "data" / "joblib" / "search_history.joblib"
+
 # Dataset paths
 # QA dataset (CSV)
 QA_PATH = PROJECT_ROOT / "data" / "QA_data" / "COMP3074-CW1-Dataset.csv"

@@ -162,6 +162,23 @@ def prompt_again(matched_example: Optional[str]) -> str:
 def unrelated_prompt() -> str:
     return "Bot: I think you are trying to do something else. How can I help you?"
 
+def no_search_history() -> str:
+    return "Bot: You don't have any search history yet."
+
+def show_search_history(history: List[str]) -> str:
+    lines = [f"{i+1}. {q}" for i, q in enumerate(history)]
+    return (
+        "Bot: Here is your search history:\n"
+        + "\n".join(lines)
+        + "\n\nBot: You can select the number from the list, or type back."
+    )
+
+def invalid_search_history_selection() -> str:
+    return "Bot: Please select a valid number from the list, or type 'back'."
+
+def back_from_search_history() -> str:
+    return "Bot: Okay, back to normal mode."
+
 def fallback() -> str:
     return f"Bot: I'm not sure I understand that, {user_name.value}. You can say something like 'what can you do?' to see your options."
 

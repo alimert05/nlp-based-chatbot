@@ -6,7 +6,8 @@ from engines.qa_engine import QaEngine
 from engines.games_engine import GamesEngine
 from engines.intent_engine import IntentEngine
 from storage import (load_name, save_name, reset_name, 
-        save_name_decision, load_name_decision, reset_purchased_game)
+        save_name_decision, load_name_decision, reset_purchased_game, load_search_history, 
+        save_search_query, reset_search_history)
 from responses import (
     recall_name, greeting, fallback, greeting_back, support, small_talk,
     user_feeling_positive, user_feeling_negative, qa_answers, prompt_again,
@@ -15,7 +16,8 @@ from responses import (
     no_name_change_or_remove, name_changed, ask_new_name, name_known, 
     confirm_name_change, name_removed, no_name_to_change, no_name_to_remove, ask_remove_name,
     error_name_change_confirmation, error_name_remove_confirmation, back_from_goodbye, same_as_old_name,
-    back_from_name_change, error_ask_save_name, unrelated_prompt
+    back_from_name_change, error_ask_save_name, unrelated_prompt, show_search_history, no_search_history, 
+    invalid_search_history_selection, back_from_search_history
 )
 from intent_handlers.game_intents_handler import GamesHandler
 
@@ -63,6 +65,9 @@ class IntentHandler:
         # Unrelated intent check
         self.count = False
 
+        # Search history flow
+        self.waiting_search_history_selection = False
+        self._replay_mode = False
 
         # For small-talk follow-up (positive/negative feelings)
         self.wait_user_input = False
@@ -107,9 +112,43 @@ class IntentHandler:
             - purchase history,
             - or non-game intent handler.
         """
-        # Get intent match
+        
         user_input = self._clean_user_input(user_input)
+
+        # If user is selecting from search history (OPTIONAL mode)
+        if self.waiting_search_history_selection:
+            # User explicitly cancels
+            if user_input.lower() == "back":
+                self.waiting_search_history_selection = False
+                return back_from_search_history()
+
+            # User chose an index
+            if user_input.isdigit():
+                history = load_search_history()
+                idx = int(user_input) - 1
+
+                if 0 <= idx < len(history):
+                    self.waiting_search_history_selection = False
+
+                    # prevent double-logging when replaying
+                    self._replay_mode = True
+                    try:
+                        return self.handle_intent(history[idx])
+                    finally:
+                        self._replay_mode = False
+
+                # Only error case you want
+                return invalid_search_history_selection()
+
+            # Anything else: exit mode and continue normally
+            self.waiting_search_history_selection = False
+            
+        # Get intent match
         label, intent_score, matched_example = self.intent_engine.match(user_input)
+
+        # Now log if appropriate
+        if not self._replay_mode and self._should_log_search(label, user_input):
+            save_search_query(user_input)
 
         # Get QA engine response
         answer, qa_score, document, best_idx = self.qa_engine.search(user_input)
@@ -231,6 +270,20 @@ class IntentHandler:
         if label == "remove_name":
             self.waiting_name_remove_confirmation = True
             return ask_remove_name()
+        
+        # Search history
+        if label == "search_history":
+            history = load_search_history()
+            if not history:
+                return no_search_history()
+
+            self.waiting_search_history_selection = True
+            return show_search_history(history)
+
+        if label == "delete_search_history":
+            reset_search_history()
+            self.waiting_search_history_selection = False
+            return "Bot: I've cleared your search history."
 
         # Discover capabilities
         if label == "discover":
@@ -496,4 +549,22 @@ class IntentHandler:
             end += 1
 
         return qa_answers(answer[start:end])
+    
+    def _should_log_search(self, label: Optional[str], user_input: str) -> bool:
+        text = user_input.strip().lower()
+
+        if not text or text.isdigit():
+            return False
+
+        if label in {"small_talk", "greet", "discover"}:
+            return False
+        
+        if label in {
+            "search_history", "delete_search_history",
+            "quit", "back",
+            "confirm_positive", "confirm_negative"
+        }:
+            return False
+
+        return True
     

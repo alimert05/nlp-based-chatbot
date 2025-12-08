@@ -2,7 +2,7 @@ from typing import Optional
 from joblib import dump, load
 from config import (USERNAME_PATH, QA_PATH, 
                     GAMES_PATH, USERNAME_DECISION_PATH, 
-                    PURCHASED_GAME_PATH)
+                    PURCHASED_GAME_PATH, SEARCH_HISTORY_PATH)
 from typing import Optional, Tuple, List
 import pandas as pd
 import sys
@@ -163,3 +163,44 @@ def load_games_data(path: str = GAMES_PATH) -> Tuple[List[str], List[str], List[
     price = df["Price"].astype(float).tolist()
 
     return titles, platforms, genre, publisher, developer, critic_score, release_date, price
+
+# Search history
+def load_search_history(path: str = SEARCH_HISTORY_PATH) -> List[str]:
+    """Load search history list."""
+    try:
+        value = load(path)
+        if isinstance(value, list):
+            # keep only strings
+            return [str(v) for v in value if isinstance(v, str) and v.strip()]
+    except Exception:
+        pass
+    return []
+
+
+def save_search_query(query: str, path: str = SEARCH_HISTORY_PATH, max_history: int = 20) -> None:
+    """
+    Append a query to search history.
+    Keeps last `max_history`.
+    De-duplicates consecutive duplicates.
+    """
+    query = str(query).strip()
+    if not query:
+        return
+
+    history = load_search_history(path)
+
+    # avoid consecutive duplicates
+    if history and history[-1].lower() == query.lower():
+        return
+
+    history.append(query)
+
+    if max_history and max_history > 0:
+        history = history[-max_history:]
+
+    dump(history, path)
+
+
+def reset_search_history(path: str = SEARCH_HISTORY_PATH) -> None:
+    """Clear search history."""
+    dump([], path)
