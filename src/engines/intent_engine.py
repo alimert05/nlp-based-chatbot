@@ -18,7 +18,7 @@ class IntentEngine:
       - returning (label, score, matched_example)
     """
 
-    def __init__(self, intent_path: str = config.INTENTS_PATH, ngram_range=(1, 2), threshold: float = 0.55, high_confidence_intents: Optional[set[str]] = None) -> None:
+    def __init__(self, intent_path: str = config.INTENTS_PATH, ngram_range=(1, 2), threshold: float = 0.50, high_confidence_intents: Optional[set[str]] = None) -> None:
         
         self.intent_path = intent_path
         self.threshold = threshold

@@ -52,7 +52,7 @@ class IntentHandler:
         self.intent_engine = IntentEngine(
             intent_path=intent_path,
             threshold=0.50,
-            high_confidence_intents={"greet", "discover", "small_talk"},
+            high_confidence_intents={"greet", "small_talk"},
         )
         self.game_handler = GamesHandler()
 

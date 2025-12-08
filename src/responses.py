@@ -677,3 +677,20 @@ def error_year_not_detected() -> str:
 
 def error_year_range_not_detected() -> str:
     return f"Bot: I couldn't see two years in your request, {user_name.value}. Try something like 'games released between 2010 and 2015'."
+
+def paged_results(header: str, items: List[str], start_index: int, page_size: int) -> str:
+    end = min(start_index + page_size, len(items))
+    page = items[start_index:end]
+
+    if not page:
+        return "Bot: There's nothing more to show."
+
+    lines = [f"{i+1}. {text}" for i, text in enumerate(page, start=start_index)]
+    msg = "Bot: " + header + "\n" + "\n".join(lines)
+
+    if end < len(items):
+        msg += "\n\nBot: Type 'more' to see more results, or ask something else."
+    return msg
+
+def no_more_results() -> str:
+    return "Bot: No more results to show."

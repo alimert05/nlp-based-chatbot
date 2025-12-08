@@ -1,0 +1,687 @@
+text,true_intent
+back,back
+back one step,back
+changed my mind,back
+go back,back
+go back one step,back
+i want to go back,back
+let's go back one step,back
+previous step,back
+return to previous,back
+take me back,back
+undo that choice,back
+can I change my name,change_name
+can you update my saved name,change_name
+change the name you call me,change_name
+could you change my name,change_name
+I feel like changing my name,change_name
+I need to change the name you have saved,change_name
+I want a new name in this chat,change_name
+I want my name to be different,change_name
+I want to change my name,change_name
+i want to change my name,change_name
+I want to go by a different name,change_name
+I want to update my name,change_name
+I want to use a different name,change_name
+I want you to call me something else,change_name
+I'd like to change my name,change_name
+I'd like to switch my name,change_name
+I'd like to update the name you use for me,change_name
+let me change my name,change_name
+may I change my name,change_name
+please change my name,change_name
+please let me use another name,change_name
+actually no,confirm_negative
+cancel,confirm_negative
+cancel this,confirm_negative
+don't confirm,confirm_negative
+don't delete it,confirm_negative
+don't keep it,confirm_negative
+don't save my name,confirm_negative
+forget it,confirm_negative
+i changed my mind,confirm_negative
+i don't want it,confirm_negative
+i don't want to change it,confirm_negative
+i don't want you to save it,confirm_negative
+keep it the same,confirm_negative
+keep my name,confirm_negative
+keep my saved name,confirm_negative
+leave it,confirm_negative
+leave it unsaved,confirm_negative
+nah,confirm_negative
+never mind,confirm_negative
+never mind don't save it,confirm_negative
+no,confirm_negative
+no do not save it,confirm_negative
+no don't change it,confirm_negative
+no don't remove it,confirm_negative
+no don't save it,confirm_negative
+no i don't want that,confirm_negative
+no keep it,confirm_negative
+no keep it the same,confirm_negative
+no keep my current name,confirm_negative
+no leave it,confirm_negative
+no please don't save it,confirm_negative
+no thank you,confirm_negative
+no thanks,confirm_negative
+nope,confirm_negative
+nope don't save it,confirm_negative
+stop,confirm_negative
+alright,confirm_positive
+alright remove it,confirm_positive
+confirm my order,confirm_positive
+delete it,confirm_positive
+delete my name,confirm_positive
+do it,confirm_positive
+go ahead,confirm_positive
+go ahead change it,confirm_positive
+go ahead remove it,confirm_positive
+i confirm,confirm_positive
+i confirm my order,confirm_positive
+i confirm the name change,confirm_positive
+let's do it,confirm_positive
+ok,confirm_positive
+ok confirm,confirm_positive
+ok delete it,confirm_positive
+okay,confirm_positive
+okay buy it,confirm_positive
+okay change it,confirm_positive
+okay remove it,confirm_positive
+okay save it,confirm_positive
+remove it,confirm_positive
+remove my name,confirm_positive
+save my name,confirm_positive
+sounds good,confirm_positive
+sure,confirm_positive
+sure save my name,confirm_positive
+that sounds good,confirm_positive
+yeah,confirm_positive
+yeah remove it,confirm_positive
+yeah save it,confirm_positive
+yep,confirm_positive
+yep remove it,confirm_positive
+yes,confirm_positive
+yes change it,confirm_positive
+yes delete it,confirm_positive
+yes do it,confirm_positive
+yes i want that,confirm_positive
+yes keep my name,confirm_positive
+yes please,confirm_positive
+yes please change it,confirm_positive
+yes please remove it,confirm_positive
+yes please save it,confirm_positive
+yes remove it,confirm_positive
+yes save it,confirm_positive
+yes that's fine,confirm_positive
+yup,confirm_positive
+clear my purchase history,delete_purchase_history
+delete my purchase history,delete_purchase_history
+remove all item in my purchase history,delete_purchase_history
+remove my purchase history,delete_purchase_history
+reset my purchase history,delete_purchase_history
+clear search history,delete_search_history
+delete my search history,delete_search_history
+reset search history,delete_search_history
+explain your features,discover
+help,discover
+how can you help me,discover
+show me options,discover
+tell me what you can do,discover
+what are you able to do,discover
+what are you good at,discover
+what are your functions,discover
+what can you do,discover
+what can you do for me,discover
+what can you help me with,discover
+what do you know,discover
+what kind of things can you do,discover
+go back from games,dont_want_games
+I changed my mind about games,dont_want_games
+I don't want games,dont_want_games
+I don't want to browse games anymore,dont_want_games
+I don't want to buy a game,dont_want_games
+i don't want to buy a game,dont_want_games
+I don't want to buy any game,dont_want_games
+I don't want to see games now,dont_want_games
+I dont want games,dont_want_games
+I dont want to buy a game,dont_want_games
+I dont want to buy any game,dont_want_games
+I dont want to see games now,dont_want_games
+I'm done with games,dont_want_games
+leave the games section,dont_want_games
+let's stop talking about games,dont_want_games
+no games,dont_want_games
+no more games please,dont_want_games
+stop the games,dont_want_games
+take me out of game mode,dont_want_games
+can we talk about games,explore_games
+i want to browse games,explore_games
+i want to buy a game,explore_games
+i want to buy some games,explore_games
+i want to see your game options,explore_games
+i would like to look at games,explore_games
+i'd like to check your games,explore_games
+let me buy some games,explore_games
+let's go to game shop,explore_games
+let's talk about games,explore_games
+list all genres,explore_genres
+show me all genres,explore_genres
+what game genres can I browse,explore_genres
+what genres do you have,explore_genres
+what kinds of games do you have,explore_genres
+what types of games do you support,explore_genres
+which game categories are there,explore_genres
+which genres are available,explore_genres
+list all platforms,explore_platforms
+show me all platforms,explore_platforms
+what consoles do you have,explore_platforms
+what platforms can I browse,explore_platforms
+what platforms do you have,explore_platforms
+what systems can I play on,explore_platforms
+which gaming platforms are there,explore_platforms
+which platforms are available,explore_platforms
+which platforms do you support,explore_platforms
+do you have any games developed by Ubisoft,games_by_developer
+games from developer Ubisoft,games_by_developer
+list games developed by Ubisoft,games_by_developer
+list games developed by FromSoftware,games_by_developer
+show me games developed by Ubisoft,games_by_developer
+show me games developed by Nintendo,games_by_developer
+show titles from developer Ubisoft,games_by_developer
+what games are made by Ubisoft,games_by_developer
+which games are developed by Ubisoft,games_by_developer
+do you have any games published by Ubisoft,games_by_publisher
+games from publisher Ubisoft,games_by_publisher
+list games published by Ubisoft,games_by_publisher
+list games published by Ubisoft,games_by_publisher
+show me games published by,games_by_publisher
+show me games published by EA,games_by_publisher
+show titles from publisher Ubisoft,games_by_publisher
+what games are from publisher Ubisoft,games_by_publisher
+which games are published by Ubisoft,games_by_publisher
+can you show me your games,games_list
+give me a list of games,games_list
+list some games,games_list
+recommend me some games,games_list
+recommend some games,games_list
+show me some games,games_list
+show me your game collection,games_list
+suggest me some games,games_list
+what games are available,games_list
+what games are in stock,games_list
+what games are in your list,games_list
+what games can I choose from,games_list
+what games do you have,games_list
+what games do you offer,games_list
+can I see Minecraft,games_list_by_name
+can you check if you have Minecraft,games_list_by_name
+can you find Minecraft,games_list_by_name
+could you look up Minecraft,games_list_by_name
+could you look up FIFA 23,games_list_by_name
+do you carry Minecraft,games_list_by_name
+do you have Minecraft,games_list_by_name
+do you have a copy of Minecraft,games_list_by_name
+do you have any version of Minecraft,games_list_by_name
+do you have Elden Ring,games_list_by_name
+do you have the game Minecraft,games_list_by_name
+do you offer Minecraft,games_list_by_name
+do you sell Minecraft,games_list_by_name
+do you stock Minecraft,games_list_by_name
+find me Minecraft,games_list_by_name
+have you got Minecraft,games_list_by_name
+I'd like to get Minecraft,games_list_by_name
+I'm interested in Minecraft,games_list_by_name
+I'm looking for Minecraft,games_list_by_name
+is available Minecraft,games_list_by_name
+is there Minecraft,games_list_by_name
+search for Minecraft,games_list_by_name
+do you have games with critic score 8 between and 9,games_search_by_critic_between
+find games rated between 8 and 9,games_search_by_critic_between
+games rated from 8 to 9,games_search_by_critic_between
+games with critic score between 7 and 8,games_search_by_critic_between
+games with rating between 8 and 9,games_search_by_critic_between
+games with reviews from 6 to 7,games_search_by_critic_between
+list games with score between 5 and 6,games_search_by_critic_between
+show me games with critic score between 5 and 6,games_search_by_critic_between
+titles with score between 8 and 9,games_search_by_critic_between
+titles with score between 4 and 5,games_search_by_critic_between
+do you have games with critic score 7,games_search_by_critic_exact
+find games with rating 7,games_search_by_critic_exact
+games rated 7,games_search_by_critic_exact
+games rated 8,games_search_by_critic_exact
+games rated exactly 5,games_search_by_critic_exact
+games that have rating 3,games_search_by_critic_exact
+games with exact rating of 2,games_search_by_critic_exact
+list games with score exactly 9,games_search_by_critic_exact
+show me games with critic score 4,games_search_by_critic_exact
+show me games with critic score 7,games_search_by_critic_exact
+do you have games with critic score over  5,games_search_by_critic_high
+find games with score higher than 6,games_search_by_critic_high
+games with critic score over 8,games_search_by_critic_high
+games with great reviews above 8,games_search_by_critic_high
+games with high critic score over 3,games_search_by_critic_high
+games with rating higher than 6,games_search_by_critic_high
+list games over rating 6,games_search_by_critic_high
+show highly-rated games 7,games_search_by_critic_high
+show highly-rated games above 9,games_search_by_critic_high
+show me games with critic score above 4,games_search_by_critic_high
+do you have games with critic score under 7,games_search_by_critic_low
+find games with score less than 8,games_search_by_critic_low
+games with critic score under 6,games_search_by_critic_low
+games with low critic score under 6,games_search_by_critic_low
+games with poor reviews below 6,games_search_by_critic_low
+games with rating lower than 7,games_search_by_critic_low
+list games under rating 8,games_search_by_critic_low
+show low-rated games under 6,games_search_by_critic_low
+show low-rated games under 5,games_search_by_critic_low
+show me games with critic score below 7,games_search_by_critic_low
+can you show me some action games,games_search_by_genre
+do you have any action games,games_search_by_genre
+find action games,games_search_by_genre
+i want action games,games_search_by_genre
+i want some action games,games_search_by_genre
+i'm looking for action games,games_search_by_genre
+i'm looking for racing games,games_search_by_genre
+list action games,games_search_by_genre
+show me action games,games_search_by_genre
+show me horror games,games_search_by_genre
+any games for ps3,games_search_by_platform
+do you have any ps3 games,games_search_by_platform
+do you have any games available on ps3,games_search_by_platform
+list games available on ps3,games_search_by_platform
+list games for ps3,games_search_by_platform
+list games for pc,games_search_by_platform
+show me ps3 games,games_search_by_platform
+show me games available on ps3,games_search_by_platform
+show me games available on ps5,games_search_by_platform
+show me games for pc,games_search_by_platform
+what ps3 games are available,games_search_by_platform
+what xbox games do you have,games_search_by_platform
+ any games between 30 and 40 pounds,games_search_by_price_between
+can you show games between 30 and 40 pounds,games_search_by_price_between
+do you have games cost between 30 and 40 pounds,games_search_by_price_between
+find games between 30 and 40 pounds,games_search_by_price_between
+find games that are between 30 and 40 pounds,games_search_by_price_between
+games available between 30 and 40 pounds,games_search_by_price_between
+games between 30 and 40 pounds,games_search_by_price_between
+games between 10 and 20 pounds,games_search_by_price_between
+games in the price range between 30 and 40 pounds,games_search_by_price_between
+games priced between 30 and 40 pounds,games_search_by_price_between
+games that cost between 30 and 40 pounds,games_search_by_price_between
+I want games between 30 and 40 pounds,games_search_by_price_between
+i'm looking for games in the range 30 and 40 pounds,games_search_by_price_between
+list games between 30 and 40 pounds,games_search_by_price_between
+list games that cost between 30 and 40 pounds,games_search_by_price_between
+show games costing between 30 and 40 pounds,games_search_by_price_between
+show games costing between 30 and 40 pounds,games_search_by_price_between
+show me games costs between 30 and 40 pounds,games_search_by_price_between
+what games are priced between 30 and 40 pounds,games_search_by_price_between
+ any games for 40 pounds,games_search_by_price_exact
+around 40 pounds,games_search_by_price_exact
+can you show games for 10 pounds,games_search_by_price_exact
+do you have games costs 10 pounds,games_search_by_price_exact
+find games costs around 10 pounds,games_search_by_price_exact
+find games for 10 pounds,games_search_by_price_exact
+games for exactly 10 pounds,games_search_by_price_exact
+games priced at 30 pounds,games_search_by_price_exact
+games priced at 10 pounds,games_search_by_price_exact
+games that cost 10 pounds,games_search_by_price_exact
+I want games that cost 10 pounds,games_search_by_price_exact
+list games for 10 pounds,games_search_by_price_exact
+show games costing 10 pounds,games_search_by_price_exact
+show games costs around 10 pounds,games_search_by_price_exact
+show me games costs 10 pounds,games_search_by_price_exact
+what can i get for 25 pounds,games_search_by_price_exact
+what can I get for 10 pounds,games_search_by_price_exact
+what games are priced at 10 pounds,games_search_by_price_exact
+any games above 10 pounds,games_search_by_price_high
+can you show games over 10 pounds,games_search_by_price_high
+do you have games over 10 pounds,games_search_by_price_high
+find games over 20 pounds,games_search_by_price_high
+games above 60 pounds,games_search_by_price_high
+games above 20 pounds,games_search_by_price_high
+games more than 20 pounds,games_search_by_price_high
+I want games more than 20 pounds,games_search_by_price_high
+list expensive games over 20 pounds,games_search_by_price_high
+show games costing more than 20 pounds,games_search_by_price_high
+show me games over 50 pounds,games_search_by_price_high
+show me games over 20 pounds,games_search_by_price_high
+what games are over 20 pounds,games_search_by_price_high
+any games under 20 pounds,games_search_by_price_low
+do you have games under 20 pounds,games_search_by_price_low
+find games under 20 pounds,games_search_by_price_low
+games below 30 pounds,games_search_by_price_low
+games cheaper than 20 pounds,games_search_by_price_low
+games cheaper than 30 pounds,games_search_by_price_low
+games less than 30 pounds,games_search_by_price_low
+I want games under 30 pounds,games_search_by_price_low
+list games under 30 pounds,games_search_by_price_low
+show cheap games under 30 pounds,games_search_by_price_low
+show me games under 10 pounds,games_search_by_price_low
+show me games under 30 pounds,games_search_by_price_low
+what can I buy under 30 pounds,games_search_by_price_low
+what games are under 30 pounds,games_search_by_price_low
+can you show me all games after 2010,games_search_by_release_after
+display games launched after 2010,games_search_by_release_after
+do you have games published after 2010,games_search_by_release_after
+do you have games released after 2010,games_search_by_release_after
+find titles released after 2010,games_search_by_release_after
+games later than 2010,games_search_by_release_after
+games later than 2018,games_search_by_release_after
+games released later than 2010,games_search_by_release_after
+games that came out after 2010,games_search_by_release_after
+I want to see games from after 2010,games_search_by_release_after
+list games released after 2010,games_search_by_release_after
+older games after 2010,games_search_by_release_after
+show me games after 2010,games_search_by_release_after
+show me games released after 2020,games_search_by_release_after
+show me newer games than 2010,games_search_by_release_after
+show old games released after 2010,games_search_by_release_after
+what games came out after 2010,games_search_by_release_after
+which games were released after 2010,games_search_by_release_after
+can you show me all games before 2010,games_search_by_release_before
+display games launched before 2020,games_search_by_release_before
+do you have games published before 2020,games_search_by_release_before
+do you have games released before 2020,games_search_by_release_before
+find titles released before 2020,games_search_by_release_before
+games earlier than 2020,games_search_by_release_before
+games released earlier than 2020,games_search_by_release_before
+games that came out before 2020,games_search_by_release_before
+I want to see games from before 2020,games_search_by_release_before
+list games released before 2020,games_search_by_release_before
+older games before 2020,games_search_by_release_before
+older games before 2010,games_search_by_release_before
+show me games before 2020,games_search_by_release_before
+show me games released before 2015,games_search_by_release_before
+show me older games than 2020,games_search_by_release_before
+show old games released before 2020,games_search_by_release_before
+what games came out before 2020,games_search_by_release_before
+which games were released before 2020,games_search_by_release_before
+can you show me all games released between 2010 and 2015,games_search_by_release_between
+display games launched between 2010 and 2015,games_search_by_release_between
+do you have games published between 2010 and 2015,games_search_by_release_between
+do you have games released in between 2010 and 2015,games_search_by_release_between
+find titles released between 2010 and 2015,games_search_by_release_between
+games from between 2010 and 2015,games_search_by_release_between
+games released between 2010 and 2015,games_search_by_release_between
+games that came out between 2010 and 2015,games_search_by_release_between
+I want to see games from to 2010 to 2021,games_search_by_release_between
+list games released between 2010 and 2015,games_search_by_release_between
+show me games released between 2010 and 2015,games_search_by_release_between
+titles released between 2018 and 2021,games_search_by_release_between
+titles released between 2010 and 2015,games_search_by_release_between
+what games came out between 2010 and 2015,games_search_by_release_between
+which games were released between 2010 and 2015,games_search_by_release_between
+can you show me all games released in 2018,games_search_by_release_exact
+display games launched in 2018,games_search_by_release_exact
+do you have games published in 2018,games_search_by_release_exact
+do you have games released in 2018,games_search_by_release_exact
+find titles released in 2018,games_search_by_release_exact
+games from the year 2018,games_search_by_release_exact
+games released during 2018,games_search_by_release_exact
+games released in 2023,games_search_by_release_exact
+games that came out in 2018,games_search_by_release_exact
+list games released in 2018,games_search_by_release_exact
+show me games released in 2018,games_search_by_release_exact
+what games came out in 2018,games_search_by_release_exact
+what games came out in 2022,games_search_by_release_exact
+which games were released in 2018,games_search_by_release_exact
+any really cheap games ,games_search_cheapest
+can you show me the cheapest ones,games_search_cheapest
+find the cheapest games,games_search_cheapest
+games with the lowest price,games_search_cheapest
+i want the cheapest games,games_search_cheapest
+list the cheapest games,games_search_cheapest
+show me the cheapest games,games_search_cheapest
+show the lowest priced games,games_search_cheapest
+what are the cheapest games you have,games_search_cheapest
+what are your cheapest games,games_search_cheapest
+what is the cheapest game,games_search_cheapest
+which games are the cheapest,games_search_cheapest
+any top rated games,games_search_highest_critic
+can you show me the highest rated ones,games_search_highest_critic
+find games that scored really high,games_search_highest_critic
+find the best rated games,games_search_highest_critic
+games with excellent critic scores,games_search_highest_critic
+games with the best critic score,games_search_highest_critic
+I want the highest rated games,games_search_highest_critic
+list the highest scoring games,games_search_highest_critic
+show games with the highest rating,games_search_highest_critic
+show me the games with the best reviews,games_search_highest_critic
+show me the highest rated games,games_search_highest_critic
+what are the highest rated games you have,games_search_highest_critic
+what is the highest rated game,games_search_highest_critic
+which game has the highest score,games_search_highest_critic
+which games have the highest critic score,games_search_highest_critic
+any poorly rated games,games_search_lowest_critic
+can you show me the lowest rated ones,games_search_lowest_critic
+find games that scored really low,games_search_lowest_critic
+find the worst rated games,games_search_lowest_critic
+games with bad critic scores,games_search_lowest_critic
+games with the worst critic score,games_search_lowest_critic
+I want the lowest rated games,games_search_lowest_critic
+list the lowest scoring games,games_search_lowest_critic
+show games with the lowest rating,games_search_lowest_critic
+show me the games with the worst reviews,games_search_lowest_critic
+show me the lowest rated games,games_search_lowest_critic
+what are the lowest rated games you have,games_search_lowest_critic
+what is the lowest rated game,games_search_lowest_critic
+which game has the lowest score,games_search_lowest_critic
+which games have the lowest critic score,games_search_lowest_critic
+any really expensive games,games_search_most_expensive
+can you show me the most expensive ones,games_search_most_expensive
+find the most expensive games,games_search_most_expensive
+games with the highest price,games_search_most_expensive
+i want the most expensive games,games_search_most_expensive
+list the most expensive games,games_search_most_expensive
+show me the most expensive games,games_search_most_expensive
+show the highest priced games,games_search_most_expensive
+what are the most expensive games you have,games_search_most_expensive
+what are your most expensive games,games_search_most_expensive
+what is the most expensive game,games_search_most_expensive
+which games are the most expensive,games_search_most_expensive
+any brand new games,games_search_newest
+can you show me the newest ones,games_search_newest
+find games released this year,games_search_newest
+find the latest released games,games_search_newest
+games released lately,games_search_newest
+games that came out recently,games_search_newest
+I want the newest games,games_search_newest
+list the newest games,games_search_newest
+show me the newest games,games_search_newest
+show recently released games,games_search_newest
+show the most recently released games,games_search_newest
+what are the latest released games,games_search_newest
+what are the newest games you have,games_search_newest
+what is the newest game you have,games_search_newest
+which game was released the latest,games_search_newest
+which games were released most recently,games_search_newest
+any very old games,games_search_oldest
+can you show me the oldest ones,games_search_oldest
+find games from many years ago,games_search_oldest
+find the earliest released games,games_search_oldest
+games released a long time ago,games_search_oldest
+games released the longest time ago,games_search_oldest
+I want the oldest games,games_search_oldest
+list the oldest games,games_search_oldest
+show games from the earliest years,games_search_oldest
+show me the oldest games,games_search_oldest
+show really old games,games_search_oldest
+what are the oldest games you have,games_search_oldest
+what is the oldest game you have,games_search_oldest
+which game was released the earliest,games_search_oldest
+which games were released the earliest,games_search_oldest
+good afternoon,greet
+good evening,greet
+good morning,greet
+hello,greet
+hello there,greet
+hey,greet
+hey there,greet
+"hey, bot",greet
+"hey, how's it going",greet
+hi,greet
+hi again,greet
+hi bot,greet
+hi there,greet
+yo,greet
+call me John,introduce_self
+call me Mert,introduce_self
+change it to John,introduce_self
+change my name to  John,introduce_self
+"hey, I’m John",introduce_self
+"hi, my name is John",introduce_self
+i am John,introduce_self
+i go by John,introduce_self
+i go by Ayse,introduce_self
+i prefer to be called,introduce_self
+I want to change it to ,introduce_self
+i’m John,introduce_self
+it is John,introduce_self
+it’s John,introduce_self
+its John,introduce_self
+let's say my name is John,introduce_self
+my name is John,introduce_self
+my name is Ali,introduce_self
+my new name is John,introduce_self
+people call me John,introduce_self
+please use the name  John,introduce_self
+this is John,introduce_self
+use the name  John,introduce_self
+you can call me John,introduce_self
+you can just call me John,introduce_self
+you may call me John,introduce_self
+I don't feel comfortable giving my name,name_refuse
+I don't want to give my name,name_refuse
+I don't want to provide my name,name_refuse
+i don't want to share my name,name_refuse
+I don't want to tell you my name,name_refuse
+I prefer to stay anonymous,name_refuse
+I won't share my name,name_refuse
+I'd like to keep my name private,name_refuse
+I'd rather not give my name,name_refuse
+i'd rather not give my name,name_refuse
+no,name_refuse
+remind me what I bought,purchase_history
+show my purchase history,purchase_history
+what did I bought,purchase_history
+what did I buy,purchase_history
+what did I order,purchase_history
+what game did we buy,purchase_history
+what games have I purchased,purchase_history
+what games have i purchased,purchase_history
+what was my last purchase,purchase_history
+bye,quit
+exit,quit
+goodbye,quit
+i have to go,quit
+i'm done,quit
+i'm leaving now,quit
+quit,quit
+see you later,quit
+talk to you later,quit
+"thanks, bye",quit
+that's all,quit
+do you remember my name,recall_name
+do you still remember my name,recall_name
+how do you remember my name,recall_name
+tell me my name,recall_name
+what did I say my name is,recall_name
+what did I tell you my name was,recall_name
+what do you call me,recall_name
+what is my name,recall_name
+what name did I give you,recall_name
+what name did i give you,recall_name
+who am i,recall_name
+clear my name,remove_name
+clear the saved name,remove_name
+delete my name,remove_name
+delete the name from your memory,remove_name
+delete the name you remember,remove_name
+don't keep my name anymore,remove_name
+erase my name,remove_name
+forget my name,remove_name
+forget the name you know,remove_name
+I don't want you to remember my name,remove_name
+I want my name removed,remove_name
+I want you to forget my name,remove_name
+please forget what my name is,remove_name
+remove my name,remove_name
+remove my stored name,remove_name
+remove the name you saved,remove_name
+reset my name,remove_name
+stop remembering my name,remove_name
+stop using my name,remove_name
+wipe my name,remove_name
+my searches,search_history
+search history,search_history
+show my search history,search_history
+what did I search,search_history
+are you doing well,small_talk
+are you okay,small_talk
+are you okay today,small_talk
+how are things,small_talk
+how are you,small_talk
+how are you doing,small_talk
+how are you feeling,small_talk
+how are you today,small_talk
+how do you do,small_talk
+how do you feel,small_talk
+how have you been,small_talk
+how is it going,small_talk
+how you doing,small_talk
+how's everything,small_talk
+how's your day,small_talk
+how's your day going,small_talk
+is everything alright,small_talk
+you alright,small_talk
+you doing okay,small_talk
+can I purchase,start_buying_process
+can i purchase elden ring,start_buying_process
+can we buy this game,start_buying_process
+i am buying,start_buying_process
+i want to buy,start_buying_process
+i want to buy fifa 23,start_buying_process
+i want to buy that one,start_buying_process
+i want to purchase,start_buying_process
+i'd like to buy game,start_buying_process
+i'm ready to buy ,start_buying_process
+let me buy,start_buying_process
+let's buy this,start_buying_process
+feeling a bit low,user_feeling_negative
+feeling bad,user_feeling_negative
+i am not okay,user_feeling_negative
+I don't feel good,user_feeling_negative
+i feel awful,user_feeling_negative
+i'm a bit down,user_feeling_negative
+i'm bad,user_feeling_negative
+i'm feeling down,user_feeling_negative
+i'm not great,user_feeling_negative
+i'm not okay today,user_feeling_negative
+i'm not so good,user_feeling_negative
+i'm stressed,user_feeling_negative
+i'm tired,user_feeling_negative
+i'm tired today,user_feeling_negative
+i've been better,user_feeling_negative
+not doing so well,user_feeling_negative
+all good,user_feeling_positive
+can't complain,user_feeling_positive
+doing good,user_feeling_positive
+doing well,user_feeling_positive
+everything is good,user_feeling_positive
+feeling fine,user_feeling_positive
+i am alright,user_feeling_positive
+i am fine,user_feeling_positive
+i am good,user_feeling_positive
+i am okay,user_feeling_positive
+i feel great,user_feeling_positive
+i'm alright,user_feeling_positive
+i'm doing great,user_feeling_positive
+i'm excellent,user_feeling_positive
+i'm feeling good,user_feeling_positive
+i'm fine,user_feeling_positive
+i'm good,user_feeling_positive
+i'm okay,user_feeling_positive
+not bad,user_feeling_positive
+pretty good,user_feeling_positive
+pretty good today,user_feeling_positive
