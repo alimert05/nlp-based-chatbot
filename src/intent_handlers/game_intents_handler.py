@@ -6,19 +6,19 @@ from engines.games_detectors import (
     detect_price_critic_between, detect_dates, detect_dates_between, 
     detect_selection
 )
-from storage import (load_purchased_game, save_purchased_game, reset_purchased_game)
+from storage import (load_purchased_game, save_purchased_game, reset_purchased_game, load_purchased_games)
 from responses import (games, games_by_name, games_by_platform, games_by_genre, games_by_publisher,
     games_by_developer, games_by_low_price, games_by_high_price, games_by_exact_price,
     games_by_between_prices, games_by_between_scores, games_by_exact_score,
     games_by_high_score, games_by_low_score, games_by_date_before, games_by_date_after,
     games_by_date_exact, games_by_date_between, games_explore, game_purchased, 
     no_game_found, ask_platform_disambiguation, ask_game_disambiguation,
-    confirm_order, game_not_purchased, purchase_history, user_ends_game_mode, back_from_game_selection, fallback,
+    confirm_order, game_not_purchased, user_ends_game_mode, back_from_game_selection, fallback,
     no_purchase_history, error_selection_invalid, error_confirm_oder, error_platform_not_detected, error_genre_not_detected,
     error_price_not_detected, error_price_range_not_detected, error_score_not_detected, error_score_range_not_detected,
     error_year_not_detected, error_year_range_not_detected, purchase_history_deleted, error_developer_not_detected, 
     error_publisher_not_detected, games_cheapest, games_most_expensive, games_lowest_score, games_highest_score, 
-    games_oldest, games_newest, games_list_platforms, games_list_genres 
+    games_oldest, games_newest, games_list_platforms, games_list_genres, purchase_history_list
 )
 
 class GamesHandler:
@@ -168,13 +168,13 @@ class GamesHandler:
     # Purchase History Handling
     def _handle_purchase_history(self) -> str:
         """
-        Returns the user's last purchased game if it is exists,
+        Returns the user's purchase history if it exists,
         otherwise respond that there is no purchase history.
         """
-        title, platform, price = load_purchased_game()
-        if not title or not platform or not price:
+        history = load_purchased_games()
+        if not history:
             return no_purchase_history()
-        return purchase_history(title, platform, price)
+        return purchase_history_list(history)
     
     # Resets purchase history
     def _handle_reset_purchase_history(self) -> str:

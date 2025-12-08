@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import Optional, List, Tuple
 import random
 from collections import defaultdict
 from storage import load_name, save_purchased_game
@@ -213,8 +213,11 @@ def game_purchased(selected_game: str, platform: str, price: float) -> str:
 def game_not_purchased() -> str:
     return f"Bot: No worries, {user_name.value}. If you'd like to look for another game, just ask!"
 
-def purchase_history(title: str, platform: str, price: float) -> str:
-    return f"Bot: {user_name.value}, you previously bought {title} ({platform}) for £{price:.2f}."
+def purchase_history_list(history: List[Tuple[str, str, float]]) -> str:
+    lines = []
+    for i, (title, platform, price) in enumerate(reversed(history), start=1):
+        lines.append(f"{i}. {title} ({platform}) - £{price:.2f}")
+    return "Bot: Your recent purchases:\n" + "\n".join(lines)
 
 def purchase_history_deleted() -> str:
     return "Bot: I've successfully deleted your purchase history."

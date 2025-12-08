@@ -7,6 +7,7 @@ from typing import Optional, Tuple, List
 import pandas as pd
 import sys
 
+PurchasedGame = Tuple[str, str, float]
 
 # User name storage
 def save_name(name: str, path: str = USERNAME_PATH) -> None:
@@ -48,28 +49,79 @@ def load_name_decision(path: str = USERNAME_DECISION_PATH) -> Optional[bool]:
         pass
     return None
 
-# Purchased game
-def save_purchased_game(game_title: str, game_platform: str, game_price: float,  path: str = PURCHASED_GAME_PATH) -> None:
-    """Save the last purchased game details."""
-    dump((game_title, game_platform, game_price), path)
-
-def load_purchased_game(path: str = PURCHASED_GAME_PATH) -> Tuple[Optional[str], Optional[str], Optional[float]]:
+def load_purchased_games(path: str = PURCHASED_GAME_PATH) -> List[PurchasedGame]:
     """
-    Load the last purchased game.
-    Returns: (title, platform, price) or (None, None, None) if nothing stored.
+    Load purchase history.
+    Returns a list of (title, platform, price).
+    Backward-compatible with old single-tuple storage.
     """
     try:
-        value = load(path)         
+        value = load(path)
+
+        # NEW format: list of tuples
+        if isinstance(value, list):
+            cleaned: List[PurchasedGame] = []
+            for item in value:
+                if isinstance(item, tuple) and len(item) == 3:
+                    title, platform, price = item
+                    if isinstance(title, str) and isinstance(platform, str):
+                        try:
+                            cleaned.append((title, platform, float(price)))
+                        except Exception:
+                            pass
+            return cleaned
+
+        # OLD format: single tuple
         if isinstance(value, tuple) and len(value) == 3:
-            return value
+            title, platform, price = value
+            if isinstance(title, str) and isinstance(platform, str):
+                try:
+                    return [(title, platform, float(price))]
+                except Exception:
+                    return []
+
     except Exception:
         pass
 
-    return None, None, None
+    return []
+
+
+def save_purchased_game(
+    game_title: str,
+    game_platform: str,
+    game_price: float,
+    path: str = PURCHASED_GAME_PATH,
+    max_history: int = 10
+) -> None:
+    """
+    Save purchase into history list.
+    Keeps only the last `max_history` purchases.
+    """
+    history = load_purchased_games(path)
+    history.append((game_title, game_platform, float(game_price)))
+
+    if max_history and max_history > 0:
+        history = history[-max_history:]
+
+    dump(history, path)
+
+
+def load_purchased_game(path: str = PURCHASED_GAME_PATH) -> Tuple[Optional[str], Optional[str], Optional[float]]:
+    """
+    Backward-compatible loader:
+    Returns ONLY the most recent purchase,
+    or (None, None, None) if empty.
+    """
+    history = load_purchased_games(path)
+    if not history:
+        return None, None, None
+    title, platform, price = history[-1]
+    return title, platform, price
+
 
 def reset_purchased_game(path: str = PURCHASED_GAME_PATH) -> None:
-    """Remove the currently purchased game."""
-    dump(None, path)
+    """Remove purchase history."""
+    dump([], path)
 
 # Load QA dataset
 def load_qa_data(path: str = QA_PATH) -> Tuple[List[str], List[str]]:
