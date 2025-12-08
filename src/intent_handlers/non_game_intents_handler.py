@@ -328,8 +328,8 @@ class IntentHandler:
          - Resets any active game buying state so that the session can end cleanly.
         """
         if label == "quit":
-            self.game_handler._reset_buying_state()
             self.goodbye_process = True
+            self.game_handler._reset_buying_state()
         return self.goodbye_process
 
     def _process_goodbye(self, label: str, user_input: str) -> str:

@@ -179,9 +179,12 @@ def load_search_history(path: str = SEARCH_HISTORY_PATH) -> List[str]:
 
 def save_search_query(query: str, path: str = SEARCH_HISTORY_PATH, max_history: int = 20) -> None:
     """
-    Append a query to search history.
-    Keeps last `max_history`.
-    De-duplicates consecutive duplicates.
+    Append a query to search history ONLY if it's not already present.
+    If it exists, don't add a duplicate.
+
+    Optional improvement included:
+    - Moves existing query to the end (most recent),
+      while keeping the list unique.
     """
     query = str(query).strip()
     if not query:
@@ -189,10 +192,11 @@ def save_search_query(query: str, path: str = SEARCH_HISTORY_PATH, max_history: 
 
     history = load_search_history(path)
 
-    # avoid consecutive duplicates
-    if history and history[-1].lower() == query.lower():
-        return
+    # Case-insensitive uniqueness
+    lowered = query.lower()
+    history = [h for h in history if h.strip() and h.lower() != lowered]
 
+    # Add once (now unique)
     history.append(query)
 
     if max_history and max_history > 0:
