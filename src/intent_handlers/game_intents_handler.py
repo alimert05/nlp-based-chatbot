@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 import random
 from collections import defaultdict
 from engines.games_engine import GamesEngine
@@ -104,11 +104,15 @@ class GamesHandler:
         if label == "explore_games":
             return games_explore()
         
-        # 0.1 List all platforms
+        # 0.1 Game recommendation
+        if label == "recommend_game":
+            return self._handle_recommend_game()
+        
+        # 0.2 List all platforms
         if label == "explore_platforms":
             return games_list_platforms(self.games_engine.platforms)
 
-        # 0.2 List all genres
+        # 0.3 List all genres
         if label == "explore_genres":
             return games_list_genres(self.games_engine.genre)
 
@@ -149,9 +153,6 @@ class GamesHandler:
         # 8. Confirmation step
         if self.buying_process:
             return self._handle_buy_confirmation(label, user_input)
-        
-        if label == "recommend_game":
-            return self._handle_recommend_game()
 
         # Fallback if nothing else matches
         return fallback()
@@ -601,5 +602,4 @@ class GamesHandler:
             bought_platform=bought_platform,
             bought_genre=bought_genre,
             rec_titles=rec_titles
-        )
-    
+        )    
