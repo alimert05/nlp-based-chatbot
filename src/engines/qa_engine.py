@@ -35,7 +35,6 @@ class QaEngine:
         """
         Compute similarity between the user's input and all stored questions.
         """
-
         # Convert input to a TF-IDF vector
         query_vector = self.vectorizer.transform([user_input])
 

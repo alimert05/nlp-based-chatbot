@@ -15,7 +15,7 @@ user_name = UserNameProxy()
 
 def main() -> None:
     """
-    Entry point for the console-based chatbot.
+    Entry point for the chatbot.
 
     Responsibilities:
         - Initialise the intent handler.
@@ -46,14 +46,17 @@ def main() -> None:
         response = intent_handler.handle_intent(user_input)
         
         # Special control tokens returned by IntentHandler when user quits
+
+        # Name is not saved and session ends
         if response == "no_saved_name_and_end":
             print(goodbye_no_saved_name())
             break
-
+        # Name is saved and session ends
         if response == "save_name_and_end":
             print(goodbye_saved_name())
             break
-
+        
+        # No name to save just ends session
         if response == "end":
             print(goodbye_only())
             break

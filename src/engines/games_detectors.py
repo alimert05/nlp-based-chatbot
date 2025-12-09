@@ -109,7 +109,7 @@ def detect_dates_between(user_input: str) -> Tuple[Optional[int], Optional[int]]
         min, max = max, min
     return min, max
 
-# Selection Detection
+# Numeric selection Detection
 def detect_selection(user_input: str) -> Optional[int]:
     """
     Detect a numeric selection from user input.

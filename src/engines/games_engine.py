@@ -196,8 +196,8 @@ class GamesEngine:
     def filter_prices(self, mode: str, price1: float, price2: Optional[float] = None):
         """
         Filtering modes:
-            before -> price < p1
-            after -> price > p1
+            below -> price < p1
+            above -> price > p1
             exact -> price == p1
             between -> p1 <= price <= p2
         """
@@ -220,8 +220,8 @@ class GamesEngine:
                 continue
 
             if (
-                (mode == "before" and round(value) < price1)
-                or (mode == "after" and round(value) > price1)
+                (mode == "below" and round(value) < price1)
+                or (mode == "above" and round(value) > price1)
                 or (mode == "exact" and round(value) == price1)
                 or (mode == "between" and price2 is not None and price1 <= round(value) <= price2)
             ):
@@ -272,7 +272,11 @@ class GamesEngine:
       
     def filter_scores(self, mode: str, score1: float, score2: Optional[float] = None):
         """
-        Same modes as price filtering.
+        Filtering modes:
+            below -> score < s1
+            above -> score > s1
+            exact -> score == s1
+            between -> s1 <= score <= s2
         """
         titles, critic_scores, platforms = [], [], []
 
@@ -351,7 +355,11 @@ class GamesEngine:
 
     def filter_date(self, mode: str, year1: float, year2: Optional[float] = None):
         """
-        Same modes: before, after, exact, between
+        Filtering modes:
+            before -> year < y1
+            after -> year > y1
+            exact -> year == y1
+            between -> y1 <= year <= y2
         """
         titles, years, platforms = [], [], []
 
@@ -383,9 +391,9 @@ class GamesEngine:
         the remaining words as the 'game-ish' query.
 
         Example:
-            user_input    = "do you have fifa 23 on ps5"
+            user_input    = "do you have fifa 23 "
             matched_example = "do you have"
-            -> "fifa 23 on ps5"
+             -> "fifa 23"
         """
 
         if not matched_example:

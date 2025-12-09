@@ -6,7 +6,7 @@ from engines.qa_engine import QaEngine
 from engines.games_engine import GamesEngine
 from engines.intent_engine import IntentEngine
 from storage import (load_name, save_name, reset_name, 
-        save_name_decision, load_name_decision, reset_purchased_game, load_search_history, 
+        save_name_decision, load_name_decision, reset_purchased_games, load_search_history, 
         save_search_query, reset_search_history)
 from responses import (
     recall_name, greeting, fallback, greeting_back, support, small_talk,
@@ -27,16 +27,16 @@ class IntentHandler:
 
     Responsibilities:
     - Route user input between:
-        * game flow (GamesHandler)
-        * QA flow (course Q&A)
-        * name handling (introduce / change / remove)
-        * small talk and emotional follow-ups
-        * goodbye / end-session flow
+        - game flow (GamesHandler)
+        - QA flow (course Q&A)
+        - name handling (introduce / change / remove)
+        - small talk and emotional follow-ups
+        - goodbye / end-session flow
     - Maintain cross-turn state such as:
-        * whether the user gave their name
-        * explicit name change flow
-        * goodbye flow (save name or not)
-        * small-talk follow-up (positive/negative)
+        - whether the user gave their name
+        - explicit name change flow
+        - goodbye flow (save name or not)
+        - small-talk follow-up (positive/negative)
     """
     
     def __init__(self, intent_path: str = config.INTENTS_PATH) -> None:
@@ -49,11 +49,9 @@ class IntentHandler:
         self.name_recogniser = NameRecogniser()
         self.qa_engine = QaEngine()
         self.games_engine = GamesEngine()
-        self.intent_engine = IntentEngine(
-            intent_path=intent_path,
-            threshold=0.50,
-            high_confidence_intents={"greet", "small_talk"},
-        )
+        self.intent_engine = IntentEngine()
+
+        # Dedicated game-mode handler
         self.game_handler = GamesHandler()
 
         # State management
@@ -63,7 +61,7 @@ class IntentHandler:
     def _init_state(self):
         """Initialise all per-session state variables"""
         # Unrelated intent check
-        self.count = False
+        self.unrelated_input = False
 
         # Search history flow
         self.waiting_search_history_selection = False
@@ -96,6 +94,7 @@ class IntentHandler:
         self.greeting_process = False
 
     # Remove everything from the FIRST comma onward
+    # To support name introduction: "my name is John, my friend" -> "my name is John" 
     def _clean_user_input(self, text: str) -> str:
         return text.split(",", 1)[0].strip()
 
@@ -112,19 +111,22 @@ class IntentHandler:
             - purchase history,
             - or non-game intent handler.
         """
-        # Get intent match
+        # Intent match (label + confidence score + best example)
         label, intent_score, matched_example = self.intent_engine.match(user_input)
 
-        # Get QA engine response
+        # QA match returns an answer candidate and associated confidence
         answer, qa_score, document, best_idx = self.qa_engine.search(user_input)
 
-        # Extract cleaned-up game query from template
+        # Extract cleaned game query from template
         game_query = self.games_engine._extract_game_query_from_example(user_input, matched_example or "")
         
+        # Normalises user input 
         user_input = self._clean_user_input(user_input)
-
+        
+        # --- Search history selection sub-flow ---
         # If user is selecting from search history 
         if self.waiting_search_history_selection:
+
             # User explicitly cancels
             if label == "back":
                 self.waiting_search_history_selection = False
@@ -145,44 +147,44 @@ class IntentHandler:
                     finally:
                         self._replay_mode = False
 
-                # Only error case you want
                 return invalid_search_history_selection()
 
             # Anything else: exit mode and continue normally
             self.waiting_search_history_selection = False
 
-        # Now log if appropriate
+        # --- Search logging ---
+        # Skip logging when replaying history to avoid duplicates
         if not self._replay_mode and self._should_log_search(label, user_input):
             save_search_query(user_input)
 
-        # Game mode handling - Check if we're already in game mode
+        # --- Game-mode routing ---
+        # Check if we're already in game mode
         if self.game_handler.is_game_intent(label):
             return self.game_handler.handle_game_intent(label, user_input, game_query)
-            
-        # QA engine queries (non-game mode only)
+        
+        # --- QA vs Intent decision ---
+        # If QA confidence score is bigger than intent score, treat as QA
         if qa_score > intent_score:
             return self._handle_qa_answer(answer, document, best_idx)
         
-        # Purchase history
+        # --- Purchase history commands ---
         if label == "purchase_history":
             return self.game_handler._handle_purchase_history()
         
         if label == "delete_purchase_history":
             return self.game_handler._handle_reset_purchase_history()
-
-        # Game intents
-        if self.game_handler.is_game_intent(label):
-            return self.game_handler.handle_game_intent(label, user_input, game_query)
         
+        # --- Medium confidence handling ---
+        # Ask user to rephrase the input
         if self.low_confidence <= intent_score < self.high_confidence:
             # Ask user to rephrase
             return prompt_again(matched_example)
         
-        # Low confidence handling
+        # --- Low confidence handling ---
         if label is None:
             return fallback()
         
-        # Non-game mode intents
+        # All remaining non-game mode intents
         return self._handle_non_game_mode(label, user_input, matched_example)
     
     # Non-game Intents
@@ -192,7 +194,7 @@ class IntentHandler:
         - greeting / discover / small talk
         - name introduction / recall / change / remove 
         - goodbye flow and name-saving decision
-        - low-confidence fallback
+        - search history actions
         """
 
         # User refuses to give name
@@ -205,7 +207,7 @@ class IntentHandler:
                 self.greeting_process = False
                 self.name_refused = True
         
-        # Goodbye flow
+        # --- Goodbye flow --- 
         if label == "back" and self.goodbye_process:
             return self._handle_back_goodbye_process() 
         
@@ -239,38 +241,38 @@ class IntentHandler:
                 # User is giving their new name sentence
                 return self._explicit_name_change(label, user_input, matched_example)
 
-            if self.count:
-                self.count = False
+            if self.unrelated_input:
+                self.unrelated_input = False
                 self.explicit_change_flow = False
                 return unrelated_prompt()
             
             # Anything else here means: user didn't give a name,
             # so remind them what to do.
-            self.count = True
+            self.unrelated_input = True
             return ask_new_name()
         
-        # Simple name-change flow (not explicit multi-step)
+        # --- Simple name-change flow (not explicit multi-step) ---
         if self.change_name:
             return self._handle_name_change(label, user_input)
         
-        # Remove-name confirmation flow
+        # --- Remove-name confirmation flow ---
         if self.waiting_name_remove_confirmation:
             return self._handle_remove_name(label, user_input)
         
-        # Normal introduction (when user not in explicit change flow)
+        # --- Normal introduction (when user not in explicit change flow) ---
         if not self.explicit_change_flow and label == "introduce_self":
             return self._handle_introduction(user_input, matched_example)
         
-        # Back from explicit-change flow 
+        # --- Back from explicit-change flow ---
         if label == "back" and self.explicit_change_flow:
             return self._handle_back_name_flow()
         
-        # Start remove-name confirmation flow
+        # --- Start remove-name confirmation flow ---
         if label == "remove_name":
             self.waiting_name_remove_confirmation = True
             return ask_remove_name()
         
-        # Search history
+        # --- Search history --- 
         if label == "search_history":
             history = load_search_history()
             if not history:
@@ -284,22 +286,22 @@ class IntentHandler:
             self.waiting_search_history_selection = False
             return "Bot: I've cleared your search history."
 
-        # Discover capabilities
+        # --- Discover capabilities ---
         if label == "discover":
             return support()
         
-        # Simple greeting
+        # --- Greeting ---
         if label == "greet":
             return greeting_back(matched_example)
 
-        # Recall name
+        # --- Recall name ---
         if label == "recall_name":
             if self.name_given:
                 return recall_name()
             else:
                 return no_name_to_recall()
         
-        # Small talk
+        # --- Small talk with emotional follow-up ---
         if label == "small_talk":
             self.wait_user_input = True
             return small_talk()
@@ -318,13 +320,13 @@ class IntentHandler:
         
         # No specific handler above -> generic fallback
         self.wait_user_input = False
-        # return fallback()
+        return fallback()
 
     # Goodbye / End Session
     def _handle_goodbye_process(self, label: str) -> bool:
         """
         Mark that we are in the goodbye process if user wants to quit
-         - Resets any active game buying state so that the session can end cleanly.
+        Resets any active game buying state so that the session can end cleanly.
         """
         if label == "quit":
             self.goodbye_process = True
@@ -339,17 +341,18 @@ class IntentHandler:
         Returns: 
         - "save_name_and_end" or "no_saved_name_and_end" control tokens
         - or "end" if no name is known
+        extra yes/no added for prevent overlaps with other intents
         """
         if self.name_given:
-             
+            
             if label == "confirm_negative" or user_input.lower() == "no":
                 save_name_decision(False)
                 reset_name()
-                reset_purchased_game()
+                reset_purchased_games()
                 self.goodbye_process = False
                 return "no_saved_name_and_end"
 
-            if label == "confirm_positive":
+            if label == "confirm_positive" or user_input.lower == "yes":
                 save_name_decision(True)
                 self.goodbye_process = False
                 return "save_name_and_end"
@@ -358,13 +361,14 @@ class IntentHandler:
             if self.goodbye_error:
                 return error_ask_save_name()
             
-            if self.count:
-                self.count = False
+            # Unrelated input protection
+            if self.unrelated_input:
+                self.unrelated_input = False
                 self.goodbye_process = False
                 self.goodbye_error = False
                 return unrelated_prompt()
             
-            self.count = True
+            self.unrelated_input = True
             self.goodbye_error = True
             return ask_save_name()
 
@@ -414,24 +418,25 @@ class IntentHandler:
         Simple name-change confirmation:
         - 'yes' / confirmation positive -> save new username
         - 'no' / confirmation_negative -> keep old name
+        extra yes/no added for prevent overlaps with other intents
         """
-        if label == "confirm_positive":
+        if label == "confirm_positive" or user_input.lower() == "yes":
             self.change_name = False
             self.name_given = True
             save_name(self.new_username)
             self.username = self.new_username
             return name_changed()
         
-        if label == "confirm_negative":
+        if label == "confirm_negative" or user_input.lower() == "no":
             self.change_name = False
             return no_name_change_or_remove()
         
-        if self.count:
-            self.count = False
+        if self.unrelated_input:
+            self.unrelated_input = False
             self.change_name = False
             return unrelated_prompt()
         
-        self.count = True
+        self.unrelated_input = True
         return error_name_change_confirmation()
     
     def _explicit_name_change(self, label: str, user_input: str, matched_example: Optional[str]) -> str:
@@ -447,11 +452,11 @@ class IntentHandler:
         if not self.waiting_name_confirmation:
             normalised_input = self.name_recogniser.normalise_intro(user_input, matched_example)
             extracted_name = self.name_recogniser.extract_name(normalised_input)
-            self.count = False
+            self.unrelated_input = False
             
             # No name detected -> ask again
             if not extracted_name:
-                self.count = True
+                self.unrelated_input = True
                 # Message should tell user: "Please tell me your new name or type 'back'."
                 return ask_new_name()
 
@@ -466,35 +471,33 @@ class IntentHandler:
             return confirm_name_change(extracted_name)
 
         # --- PHASE 2: expecting YES / NO confirmation ---
-        if label == "confirm_positive":
+        if label == "confirm_positive" or user_input.lower() == "yes":
             # User confirmed the new name
             self.waiting_name_confirmation = False
             self.explicit_change_flow = False
             if self.pending_new_name:
                 save_name(self.pending_new_name)
                 self.username = self.pending_new_name
-            self.count = False
+            self.unrelated_input = False
             return name_changed()
 
-        if label == "confirm_negative":
+        if label == "confirm_negative" or user_input.lower() == "no":
             # User rejected the change -> do nothing and exit flow
             self.waiting_name_confirmation = False
             self.explicit_change_flow = False
             self.pending_new_name = None
-            self.count = False
+            self.unrelated_input = False
             return no_name_change_or_remove()
 
-        # If user types "back" here, we handle it outside via _handle_back_name_flow,
-        # so reaching here means: not yes / not no / not back.
-        # Ask them again to confirm or type back.
-        if self.count:
-            self.count = False
+        # Unrelated/invalid input protection
+        if self.unrelated_input:
+            self.unrelated_input = False
             self.waiting_name_confirmation = False
             self.explicit_change_flow = False
             self.pending_new_name = None
             return unrelated_prompt()
         
-        self.count = True
+        self.unrelated_input = True
         return error_name_change_confirmation()  # e.g. "Please say yes, no, or 'back' to cancel."
     
     def _handle_back_name_flow(self) -> str:
@@ -511,22 +514,23 @@ class IntentHandler:
         Handle user confirmation when they want to remove their stored name:
         - 'yes' / confirm_positive -> remove name and clear decision
         - 'no' / confirm_negative  -> keep name
+        extra yes/no added for prevent overlaps with other intents
         """
         if self.name_given:
-            if self.count:
-                self.count = False
+            if self.unrelated_input:
+                self.unrelated_input = False
                 self.waiting_name_remove_confirmation = False
                 return unrelated_prompt()
-            if label == "confirm_positive":
+            if label == "confirm_positive" or user_input.lower() == "yes":
                 self.waiting_name_remove_confirmation = False
                 self.name_given = False
                 save_name_decision(False)
                 reset_name()
                 return name_removed()
-            if label == "confirm_negative":
+            if label == "confirm_negative" or user_input.lower() == "no":
                 self.waiting_name_remove_confirmation = False
                 return no_name_change_or_remove()
-            self.count = True
+            self.unrelated_input = True
             return error_name_remove_confirmation()
         return no_name_to_remove()
 
@@ -539,6 +543,7 @@ class IntentHandler:
         best_idx = max(0, min(best_idx, len(document) - 1))
         target_doc = document[best_idx]
 
+        # Expand range around the best match
         start = best_idx
         while start > 0 and document[start - 1] == target_doc:
             start -= 1
@@ -550,11 +555,14 @@ class IntentHandler:
         return qa_answers(answer[start:end])
     
     def _should_log_search(self, label: Optional[str], user_input: str) -> bool:
+        """Return True if input should be saved to search history"""
         text = user_input.strip().lower()
 
+        # Skip empty, numeric-only inputs
         if not text or text.isdigit():
             return False
         
+        # Skip meta/control intents
         if label in {
             "search_history", "delete_search_history",
             "quit", "back",

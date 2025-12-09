@@ -49,6 +49,7 @@ def load_name_decision(path: str = USERNAME_DECISION_PATH) -> Optional[bool]:
         pass
     return None
 
+# Purchased games history
 def load_purchased_games(path: str = PURCHASED_GAME_PATH) -> List[PurchasedGame]:
     """
     Load purchase history.
@@ -85,14 +86,7 @@ def load_purchased_games(path: str = PURCHASED_GAME_PATH) -> List[PurchasedGame]
 
     return []
 
-
-def save_purchased_game(
-    game_title: str,
-    game_platform: str,
-    game_price: float,
-    path: str = PURCHASED_GAME_PATH,
-    max_history: int = 10
-) -> None:
+def save_purchased_game(game_title: str, game_platform: str, game_price: float, path: str = PURCHASED_GAME_PATH, max_history: int = 10) -> None:
     """
     Save purchase into history list.
     Keeps only the last `max_history` purchases.
@@ -105,21 +99,7 @@ def save_purchased_game(
 
     dump(history, path)
 
-
-def load_purchased_game(path: str = PURCHASED_GAME_PATH) -> Tuple[Optional[str], Optional[str], Optional[float]]:
-    """
-    Backward-compatible loader:
-    Returns ONLY the most recent purchase,
-    or (None, None, None) if empty.
-    """
-    history = load_purchased_games(path)
-    if not history:
-        return None, None, None
-    title, platform, price = history[-1]
-    return title, platform, price
-
-
-def reset_purchased_game(path: str = PURCHASED_GAME_PATH) -> None:
+def reset_purchased_games(path: str = PURCHASED_GAME_PATH) -> None:
     """Remove purchase history."""
     dump([], path)
 

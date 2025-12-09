@@ -13,6 +13,18 @@ class UserNameProxy:
 
 user_name = UserNameProxy()
 
+MAX_FILTER_RESULTS = 20
+
+def _limit_filtered_lines(lines: List[str]) -> Tuple[List[str], int, bool]:
+    total = len(lines)
+    if total > MAX_FILTER_RESULTS:
+        return random.sample(lines, MAX_FILTER_RESULTS), total, True
+    return lines, total, False
+
+def _filtered_notice(total: int, truncated: bool) -> str:
+    if truncated:
+        return f"{total} games found. Printing {MAX_FILTER_RESULTS} of them to keep the list readable.\n"
+    return f"{total} games found.\n"
 
 # ===== BASIC RESPONSES =====
 # Name responses
@@ -365,8 +377,8 @@ def games_by_name(titles: List[str], platforms: List[str], genres: List[str], pu
         return f"Bot: Sorry {user_name.value}, I couldn't find any games matching that name."
     
     lines = []
-    for i, (title, platform, genre, publisher, developer, score, release, price) in enumerate(
-        zip(titles, platforms, genres, publishers, developers, critic_scores, release_dates, prices), start=1
+    for title, platform, genre, publisher, developer, score, release, price in zip(
+        titles, platforms, genres, publishers, developers, critic_scores, release_dates, prices
     ):
         try:
             price_val = float(price)
@@ -381,12 +393,20 @@ def games_by_name(titles: List[str], platforms: List[str], genres: List[str], pu
         release_str = str(release) if release else "Unknown"
 
         lines.append(
-            f"{i}. {title} | Platform: {platform} | Genre: {genre} | Publisher: {publisher} | "
-            f"Developer: {developer} | Critic Score: {score_str} | Release Date: {release_str} | Price: {price_str}\n"
+            f"{title} | Platform: {platform} | Genre: {genre} | Publisher: {publisher} | "
+            f"Developer: {developer} | Critic Score: {score_str} | Release Date: {release_str} | Price: {price_str}"
         )
 
-    result = "\n".join(lines)
-    return f"Bot: {user_name.value}, here are the games I found that match your search:\n\n{result}"
+    shown, total, truncated = _limit_filtered_lines(lines)
+    notice = _filtered_notice(total, truncated)
+    numbered = [f"{i}. {line}" for i, line in enumerate(shown, start=1)]
+
+
+    return (
+        f"Bot: {user_name.value}, here are the games I found that match your search:\n"
+        f"Bot: {notice}"
+        + "\n".join(numbered)
+    )
 
 # ======= PUBLISHER / DEVELOPER LISTING =======
 
@@ -394,19 +414,28 @@ def games_by_entity(entity_type: str, titles: List[str], entities: List[str]) ->
     if not titles or not entities:
         return f"Bot: Sorry {user_name.value}, I couldn't find any games by that {entity_type.lower()}."
 
-    merged = defaultdict(list)
+    merged = defaultdict(set)
     for title, entity in zip(titles, entities):
-        merged[entity].append(title)
+        if title and entity:
+            merged[entity].add(title)
 
     lines = []
-    for entity, title_list in merged.items():
+    for entity, title_set in merged.items():
         lines.append(f"{entity_type}: {entity}")
-        for i, title in enumerate(sorted(title_list), start=1):
-            lines.append(f"{i}. {title}")
-        lines.append("")
+        for title in sorted(title_set):
+            lines.append(title)
 
-    result = "\n".join(lines)
-    return f"Bot: {user_name.value}, here are some games and their {entity_type.lower()}s:\n{result}"
+    shown, total, truncated = _limit_filtered_lines(lines)
+    notice = _filtered_notice(total, truncated)
+
+    # If you want numbering AFTER sampling
+    numbered = [f"{i}. {line}" for i, line in enumerate(shown, start=1)]
+
+    return (
+        f"Bot: {user_name.value}, here are some games and their {entity_type.lower()}s:\n"
+        f"Bot: {notice}"
+        + "\n".join(numbered)
+    )
 
 def games_by_publisher(titles: List[str], publishers: List[str]) -> str:
     return games_by_entity("Publisher", titles, publishers)
@@ -455,12 +484,19 @@ def games_by_attribute(attr_name: str, attr_value: str, titles: List[str], attri
         merged[title].add(attr)
 
     lines = []
-    for i, (title, attr_set) in enumerate(merged.items(), start=1):
+    for title, attr_set in merged.items():
         attr_list = ", ".join(sorted(attr_set))
-        lines.append(f"{i}. {title} — {attr_name}: {attr_list}")
+        lines.append(f"{title} — {attr_name}: {attr_list}")
 
-    result = "\n".join(lines)
-    return f"Bot: {user_name.value}, here are the games for {attr_value}:\n{result}"
+    shown, total, truncated = _limit_filtered_lines(lines)
+    notice = _filtered_notice(total, truncated)
+    numbered = [f"{i}. {line}" for i, line in enumerate(shown, start=1)]
+
+    return (
+        f"Bot: {user_name.value}, here are the games for {attr_value}:\n"
+        f"Bot: {notice}"
+        + "\n".join(numbered)
+    )
 
 def games_by_platform(platform: str, titles: List[str], platforms: List[str]) -> str:
     return games_by_attribute("Platforms", platform, titles, platforms)
@@ -533,7 +569,6 @@ def games_by_price_filter(mode: str, price1: float, price2: Optional[float], tit
     if not titles:
         return f"Bot: Sorry {user_name.value}, I couldn't find any games {mode_messages.get(mode, 'for that price')}."
 
-    # Group offers by title
     merged = defaultdict(list)
     for title, p, platform in zip(titles, prices, platforms):
         merged[title].append((platform, float(p)))
@@ -546,17 +581,22 @@ def games_by_price_filter(mode: str, price1: float, price2: Optional[float], tit
         key_price = offers_sorted[-1][1] if reverse_sort else offers_sorted[0][1]
         items.append((title, offers_sorted, key_price))
 
-    # sort titles by key_price
     items_sorted = sorted(items, key=lambda x: x[2], reverse=reverse_sort)
 
     lines = []
-    for i, (title, offers_sorted, _) in enumerate(items_sorted, start=1):
+    for title, offers_sorted, _ in items_sorted:
         offers_str = ", ".join(f"{platform}: £{p:.2f}" for platform, p in offers_sorted)
-        lines.append(f"{i}. {title} - {offers_str}")
+        lines.append(f"{title} - {offers_str}")
 
-    result = "\n".join(lines)
-    return f"Bot: {user_name.value}, here are the games {mode_messages[mode]}:\n{result}"
+    shown, total, truncated = _limit_filtered_lines(lines)
+    notice = _filtered_notice(total, truncated)
+    numbered = [f"{i}. {line}" for i, line in enumerate(shown, start=1)]
 
+    return (
+        f"Bot: {user_name.value}, here are the games {mode_messages[mode]}:\n"
+        f"Bot: {notice}"
+        + "\n".join(numbered)
+    )
 def games_by_low_price(price: float, titles: List[str], prices: List[float], platforms: List[str]) -> str:
     return games_by_price_filter("before", price, None, titles, prices, platforms)
 
@@ -650,12 +690,19 @@ def games_by_score_filter(mode: str, score1: float, score2: Optional[float], tit
     items_sorted = sorted(items, key=lambda x: x[2], reverse=reverse_sort)
 
     lines = []
-    for i, (title, offers_sorted, _) in enumerate(items_sorted, start=1):
+    for title, offers_sorted, _ in items_sorted:
         offers_str = ", ".join(f"{platform}: {s:.1f}" for platform, s in offers_sorted)
-        lines.append(f"{i}. {title} — {offers_str}")
+        lines.append(f"{title} — {offers_str}")
 
-    result = "\n".join(lines)
-    return f"Bot: {user_name.value}, here are games {mode_messages[mode]}:\n{result}"
+    shown, total, truncated = _limit_filtered_lines(lines)
+    notice = _filtered_notice(total, truncated)
+    numbered = [f"{i}. {line}" for i, line in enumerate(shown, start=1)]
+
+    return (
+        f"Bot: {user_name.value}, here are games {mode_messages[mode]}:\n"
+        f"Bot: {notice}"
+        + "\n".join(numbered)
+    )
 
 def games_by_low_score(score: float, titles: List[str], scores: List[float], platforms: List[str]) -> str:
     return games_by_score_filter("below", score, None, titles, scores, platforms)
@@ -757,12 +804,19 @@ def games_by_date_filter(mode: str, year1: int, year2: Optional[int], titles: Li
     items_sorted = sorted(items, key=lambda x: x[2], reverse=reverse_sort)
 
     lines = []
-    for i, (title, offers_sorted, _) in enumerate(items_sorted, start=1):
+    for title, offers_sorted, _ in items_sorted:
         offers_str = ", ".join(f"{platform}: {y}" for platform, y in offers_sorted)
-        lines.append(f"{i}. {title} — {offers_str}")
+        lines.append(f"{title} — {offers_str}")
 
-    result = "\n".join(lines)
-    return f"Bot: {user_name.value}, here are games released {mode_messages[mode]}:\n{result}"
+    shown, total, truncated = _limit_filtered_lines(lines)
+    notice = _filtered_notice(total, truncated)
+    numbered = [f"{i}. {line}" for i, line in enumerate(shown, start=1)]
+
+    return (
+        f"Bot: {user_name.value}, here are games released {mode_messages[mode]}:\n"
+        f"Bot: {notice}"
+        + "\n".join(numbered)
+    )
 
 def games_by_date_before(year: int, titles: List[str], years: List[int], platforms: List[str]) -> str:
     return games_by_date_filter("before", year, None, titles, years, platforms)

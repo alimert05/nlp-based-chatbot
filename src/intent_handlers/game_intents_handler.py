@@ -7,7 +7,7 @@ from engines.games_detectors import (
     detect_price_critic_between, detect_dates, detect_dates_between, 
     detect_selection
 )
-from storage import (save_purchased_game, reset_purchased_game, load_purchased_games)
+from storage import (save_purchased_game, reset_purchased_games, load_purchased_games)
 from responses import (games, games_by_name, games_by_platform, games_by_genre, games_by_publisher,
     games_by_developer, games_by_low_price, games_by_high_price, games_by_exact_price,
     games_by_between_prices, games_by_between_scores, games_by_exact_score,
@@ -33,11 +33,15 @@ class GamesHandler:
         self.choose_platform_mode = False # True when user is choosing a platform from a numbered list
         self.buying_process = False # True when use is in any step of the buying flow
         
-        # Current selections / context
+        # Current selections / conversation context
         self.selected_game_title: Optional[str] = None
         self.current_platform_choice: Optional[str] = None
         self.current_price_choice: Optional[float] = None
+
+        # Raw query retained 
         self.game_query: Optional[str] = None
+
+        # Candidate lists used during disambiguation steps
         self.buy_candidates: list[dict] = [] # List of candidate games 
         self.current_platforms: list[str] = [] # Platforms for currently selected game
         self.current_prices: list[float] = [] # Prices aligned with current_platforms
@@ -108,11 +112,11 @@ class GamesHandler:
         if label == "recommend_game":
             return self._handle_recommend_game()
         
-        # 0.2 List all platforms
+        # 0.2 List all supported platforms
         if label == "explore_platforms":
             return games_list_platforms(self.games_engine.platforms)
 
-        # 0.3 List all genres
+        # 0.3 List all supported genres
         if label == "explore_genres":
             return games_list_genres(self.games_engine.genre)
 
@@ -134,7 +138,7 @@ class GamesHandler:
         if filter_response:
             return filter_response
         
-        # 5. Starting buy process
+        # 5. Start buying process
         if label == "start_buying_process" and not self.buying_process:
             (titles, platforms, _, _, _, _, _, prices) = self.games_engine.search_by_title(game_query)
             return self._handle_buy_process(titles, platforms, prices)
@@ -143,7 +147,7 @@ class GamesHandler:
         if label == "games_list":
             return games(self.games_engine.titles)
         
-        # 7. Game listing by name
+        # 7. Detailed game listing by title search
         if label == "games_list_by_name":
             (titles, platforms, genres, publishers, developers,
              scores, dates, prices) = self.games_engine.search_by_title(game_query)
@@ -157,7 +161,6 @@ class GamesHandler:
         # Fallback if nothing else matches
         return fallback()
 
-    # Resets all flags related to buying process
     def _reset_buying_state(self):
         """Reset all game-purchase-related state."""
         self.buying_process = False
@@ -182,9 +185,9 @@ class GamesHandler:
             return no_purchase_history()
         return purchase_history_list(history)
     
-    # Resets purchase history
     def _handle_reset_purchase_history(self) -> str:
-        reset_purchased_game()
+        """Clear saved purchase history."""
+        reset_purchased_games()
         return purchase_history_deleted()
 
     # Buy Flow: Selection (game / platform)
@@ -196,7 +199,7 @@ class GamesHandler:
         """
         selected_id = detect_selection(user_input)
 
-        # Choose game by number
+        # Stage 1: user selects a game title
         if self.choose_game_name_mode:
             if selected_id is None or not (1 <= selected_id <= len(self.buy_candidates)):
                 return error_selection_invalid(len(self.buy_candidates))
@@ -224,7 +227,7 @@ class GamesHandler:
             self.choose_platform_mode = True
             return ask_platform_disambiguation(title, platforms, prices)
 
-        # Choose platform by number
+        # Stage 2: user selects the platform for the chosen title
         if self.choose_platform_mode:
             if selected_id is None or not (1 <= selected_id <= len(self.current_platforms)):
                 return error_selection_invalid(len(self.current_platforms))
@@ -334,7 +337,7 @@ class GamesHandler:
         return None
 
     def _handle_price_filters(self, label: str, user_input: str) -> Optional[str]:
-        """Handle price filtering"""
+        """Handle price filtering."""
         if label == "games_search_cheapest":
             extreme, titles, prices, platforms = self.games_engine.get_extreme_price_games("cheapest")
             if not titles:
@@ -351,14 +354,14 @@ class GamesHandler:
             price = detect_price_critic_score(user_input)
             if price is None:
                 return error_price_not_detected()
-            titles, prices, platforms = self.games_engine.filter_prices("before", price)
+            titles, prices, platforms = self.games_engine.filter_prices("below", price)
             return games_by_low_price(price, titles, prices, platforms)
 
         if label == "games_search_by_price_high":
             price = detect_price_critic_score(user_input)
             if price is None:
                 return error_price_not_detected()
-            titles, prices, platforms = self.games_engine.filter_prices("after", price)
+            titles, prices, platforms = self.games_engine.filter_prices("above", price)
             return games_by_high_price(price, titles, prices, platforms)
         
         if label == "games_search_by_price_exact":
@@ -378,7 +381,7 @@ class GamesHandler:
         return None
 
     def _handle_score_filters(self, label: str, user_input: str) -> Optional[str]:
-        """Handle critic score filtering"""
+        """Handle critic score filtering."""
         if label == "games_search_lowest_critic":
             extreme, titles, scores, platforms = self.games_engine.get_extreme_score_games("lowest")
             if not titles:
@@ -422,7 +425,7 @@ class GamesHandler:
         return None
 
     def _handle_date_filters(self, label: str, user_input: str) -> Optional[str]:
-        """Handle release date filtering"""
+        """Handle release date filtering."""
         if label == "games_search_oldest":
             extreme, titles, years, platforms = self.games_engine.get_extreme_release_dates("oldest")
             if not titles:
@@ -480,6 +483,7 @@ class GamesHandler:
         if not titles:
             return no_game_found()
 
+        # Group offers by title
         merged_games = defaultdict(list)
         for title, platform, price_val in zip(titles, platforms, prices):
             merged_games[title].append({
@@ -487,6 +491,7 @@ class GamesHandler:
                 "price": float(price_val)
             })
 
+        # Convert grouped offers into a structure suitable for responses
         candidates = []
         for t, offers in merged_games.items():
             platforms_list = [o["platform"] for o in offers]
@@ -515,9 +520,10 @@ class GamesHandler:
                 self.current_platform_choice = self.current_platforms[0]
                 self.current_price_choice = self.current_prices[0]
                 return confirm_order(self.selected_game_title, self.current_platforms[0], self.current_prices[0])
-            else:
-                self.choose_platform_mode = True
-                return ask_platform_disambiguation(title, platforms_list, prices_list)
+            
+            # Else ask platform 
+            self.choose_platform_mode = True
+            return ask_platform_disambiguation(title, platforms_list, prices_list)
 
         # Else ask to select game
         self.choose_game_name_mode = True
@@ -529,6 +535,7 @@ class GamesHandler:
         Handle final purchase confirmation:
         - yes / confirm_positive -> purchase completed and saved to history
         - no / confirm_negative -> cancel purchase
+        - extra yes/no is to prevent overlaps between other intents
         """
         if user_input.lower() == "no" or label == "confirm_negative":
             self._reset_buying_state()

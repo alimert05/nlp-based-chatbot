@@ -6,7 +6,7 @@ from responses import fallback
 # A single "word" in a name, including accents and internal hyphens/apostrophes
 NAME_WORD = r"[A-Za-zÀ-ÖØ-öø-ÿ]+(?:[-'][A-Za-zÀ-ÖØ-öø-ÿ]+)?"
 
-# A name phrase: 1-3 words
+# A name phrase: 1-5 words
 NAME_PHRASE = rf"{NAME_WORD}(?:\s+{NAME_WORD}){{0,4}}"
 
 # All intro phrases from introduce_self + introduce_new_name
@@ -73,7 +73,10 @@ class NameRecogniser:
     
     # Name Normalisation
     def normalise_intro(self, user_input: str, matched_example: Optional[str]) -> Optional[str]:
-        """Try to align the user's introduction to the matched template."""
+        """
+        Try to align the user's introduction to the matched template.
+        Handles typos in introduction "my naem is" -> "my name is".
+        """
         if not matched_example:
             return user_input
         
