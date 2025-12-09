@@ -1,4 +1,5 @@
 from typing import Optional
+import random
 from collections import defaultdict
 from engines.games_engine import GamesEngine
 from engines.games_detectors import (
@@ -6,7 +7,7 @@ from engines.games_detectors import (
     detect_price_critic_between, detect_dates, detect_dates_between, 
     detect_selection
 )
-from storage import (load_purchased_game, save_purchased_game, reset_purchased_game, load_purchased_games)
+from storage import (save_purchased_game, reset_purchased_game, load_purchased_games)
 from responses import (games, games_by_name, games_by_platform, games_by_genre, games_by_publisher,
     games_by_developer, games_by_low_price, games_by_high_price, games_by_exact_price,
     games_by_between_prices, games_by_between_scores, games_by_exact_score,
@@ -18,7 +19,7 @@ from responses import (games, games_by_name, games_by_platform, games_by_genre, 
     error_price_not_detected, error_price_range_not_detected, error_score_not_detected, error_score_range_not_detected,
     error_year_not_detected, error_year_range_not_detected, purchase_history_deleted, error_developer_not_detected, 
     error_publisher_not_detected, games_cheapest, games_most_expensive, games_lowest_score, games_highest_score, 
-    games_oldest, games_newest, games_list_platforms, games_list_genres, purchase_history_list
+    games_oldest, games_newest, games_list_platforms, games_list_genres, purchase_history_list, no_games_to_recommend, recommend_games_personalised
 )
 
 class GamesHandler:
@@ -75,7 +76,8 @@ class GamesHandler:
                 "games_search_newest",
                 "explore_platforms",
                 "explore_genres",
-                "explore_games"
+                "explore_games",
+                "recommend_game"
             }
 
             # While in a multi-step buy process, always treat as game intent
@@ -147,6 +149,9 @@ class GamesHandler:
         # 8. Confirmation step
         if self.buying_process:
             return self._handle_buy_confirmation(label, user_input)
+        
+        if label == "recommend_game":
+            return self._handle_recommend_game()
 
         # Fallback if nothing else matches
         return fallback()
@@ -537,4 +542,64 @@ class GamesHandler:
             return game_purchased(title, platform, price)
         
         return error_confirm_oder()
+    
+    def _handle_recommend_game(self) -> str:
+        """
+        Personalised recommendation:
+        - Use most recent purchased game.
+        - Get its genre using search_by_title.
+        - Recommend games that match BOTH the same genre + same platform.
+        """
+
+        history = load_purchased_games()
+        # If no history list random 10 games
+        if not history:
+            return games(self.games_engine.titles)
+
+        # Most recent purchase
+        bought_title, bought_platform, _ = history[-1]
+
+        # Get genre of purchased title (no helper method needed)
+        (_, _, genres, _, _, _, _, _) = self.games_engine.search_by_title(bought_title)
+
+        bought_genre = str(genres[0]) if genres else None
+
+        if not bought_genre:
+            return games(self.games_engine.titles)
+
+        # Get titles that match genre
+        genre_titles, _ = self.games_engine.filter_by_genre(bought_genre)
+        if not genre_titles:
+            return no_game_found()
+
+        # Get titles that match platform
+        platform_titles, _ = self.games_engine.filter_by_platform(bought_platform)
+        if not platform_titles:
+            return no_game_found()
+
+        # Intersection of titles (case-insensitive)
+        genre_set = {t.lower() for t in genre_titles}
+        platform_set = {t.lower() for t in platform_titles}
+
+        matched_titles = [t for t in platform_titles if t.lower() in genre_set.intersection(platform_set)]
+
+        # Remove already purchased titles
+        purchased_titles = {t.lower() for (t, _, _) in history}
+        matched_titles = [t for t in matched_titles if t.lower() not in purchased_titles]
+
+        if not matched_titles:
+            return no_games_to_recommend(bought_title, bought_platform, bought_genre)
+
+        # Pick up to 10
+        if len(matched_titles) > 10:
+            rec_titles = random.sample(matched_titles, 10)
+        else:
+            rec_titles = matched_titles[:10]
+
+        return recommend_games_personalised(
+            bought_title=bought_title,
+            bought_platform=bought_platform,
+            bought_genre=bought_genre,
+            rec_titles=rec_titles
+        )
     

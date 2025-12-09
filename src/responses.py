@@ -95,37 +95,125 @@ def greeting_again() -> str:
 
 def support() -> str:
     return (
-        f"\nBot: Here's how I can help you, {user_name.value}:\n"
-        "\n💬 General chat & questions\n"
-        "- Chat with you and do a bit of small talk.\n"
-        "- Answer questions from my knowledge base.\n"
-        "- Remember your name (if you want) and use it while we talk.\n"
-        "- You can type 'help' anytime to see this again.\n"
-        "\n🎮 Working with games\n"
-        "I can help you browse, filter and buy video games. For example:\n"
-        "- \"Show me action games\"\n"
-        "- \"Show me games for PS5\"\n"
-        "- \"Games under 20 pounds\"\n"
-        "- \"Games released after 2015\"\n"
-        "- \"Games with rating above 8\"\n"
-        "\nYou can:\n"
-        "- Search for games by name.\n"
-        "- Filter games by platform, genre, price, critic score, or release year.\n"
-        "- Ask for the cheapest, most expensive, oldest, or newest games.\n"
-        "\n🛒 Buying a game (step by step)\n"
-        "If you decide to buy a game, you can say things like:\n"
-        "- \"Let me buy The Last of Us\"\n"
-        "- \"I am buying Call of Duty\"\n"
-        "- \"I'm ready to buy a game\"\n"
-        "\nThen I will:\n"
-        "1) Show you matching games and ask you to pick one by number if there are several.\n"
-        "2) If that game is on multiple platforms, I'll show the platforms and prices so you can choose.\n"
-        "3) Confirm your choice and price, and ask you to answer with 'yes', 'no', or 'back'.\n"
-        "\n🔁 Changing your mind\n"
-        "- You can type 'back' during any multi-turn conversation to go one step up.\n"
-        "- You can say 'I don't want games' if you'd like to stop talking about games.\n"
-        "\nJust ask in your own words, and I'll do my best to understand what you want next, "
-        f"{user_name.value}.\n"
+        f"\nBot: Hi {user_name.value}! Here's a clear guide to everything you can do with me.\n"
+
+        "\n════════════════════════════════════\n"
+        "💬 1) General chat & course Q&A\n"
+        "════════════════════════════════════\n"
+        "- You can say hello, ask how I am, or just chat casually.\n"
+        "- I can answer questions from my knowledge base (course Q&A).\n"
+        "\nExamples:\n"
+        "- \"hi\"\n"
+        "- \"how are you\"\n"
+        "- \"what is a process?\"\n"
+        "- \"explain deadlock\"\n"
+        "\nTip:\n"
+        "- Type \"help\" anytime to see this menu again.\n"
+
+        "\n════════════════════════════════════\n"
+        "👤 2) Your name (optional)\n"
+        "════════════════════════════════════\n"
+        "- You can tell me your name if you want.\n"
+        "- I can remember it for next time only if you agree.\n"
+        "- You can also change or remove your name.\n"
+        "\nExamples:\n"
+        "- \"my name is Ali\"\n"
+        "- \"what is my name?\"\n"
+        "- \"I want to change my name\"\n"
+        "- \"remove my name\"\n"
+
+        "\n════════════════════════════════════\n"
+        "🎮 3) Browsing and searching games\n"
+        "════════════════════════════════════\n"
+        "You can explore games in many ways:\n"
+        "- Ask what games I have.\n"
+        "- Search by name.\n"
+        "- Filter by platform, genre, price, critic score, or release year.\n"
+        "- Ask for extremes (cheapest, newest, highest rated, etc.).\n"
+        "\nExamples:\n"
+        "- \"what games do you have?\"\n"
+        "- \"do you have Call of Duty?\"\n"
+        "- \"show me games for PS5\"\n"
+        "- \"show me action games\"\n"
+        "- \"games under 20 pounds\"\n"
+        "- \"games with rating above 8\"\n"
+        "- \"games released after 2015\"\n"
+        "- \"show me the cheapest games\"\n"
+        "- \"show me the newest games\"\n"
+        "\nYou can also list categories:\n"
+        "- \"list all platforms\"\n"
+        "- \"list all genres\"\n"
+
+        "\n════════════════════════════════════\n"
+        "🛒 4) Buying a game (step-by-step)\n"
+        "════════════════════════════════════\n"
+        "To start buying, say:\n"
+        "- \"let me buy The Last of Us\"\n"
+        "- \"I want to buy Call of Duty\"\n"
+        "\nWhat I will do:\n"
+        "1) If multiple games match, I show a numbered list.\n"
+        "2) You choose a game by number.\n"
+        "3) If the game has multiple platforms, I show platform + price options.\n"
+        "4) You choose a platform by number.\n"
+        "5) I ask you to confirm.\n"
+        "\nAt confirmation, you can answer:\n"
+        "- \"yes\" to buy\n"
+        "- \"no\" to cancel\n"
+        "- \"back\" to go one step up\n"
+
+        "\n════════════════════════════════════\n"
+        "🔁 5) Going back & changing your mind\n"
+        "════════════════════════════════════\n"
+        "- You can always type \"back\" to go one step back in multi-turn conversations.\n"
+        "- \"I don't want games\" exits game transaction completely.\n"
+
+        "\n════════════════════════════════════\n"
+        "🧾 6) Purchase history\n"
+        "════════════════════════════════════\n"
+        "I store your recent purchases as a list.\n"
+        "You can ask:\n"
+        "- \"what did I buy?\"\n"
+        "- \"show my purchase history\"\n"
+        "\nYou can also clear it:\n"
+        "- \"delete purchase history\"\n"
+
+        "\n════════════════════════════════════\n"
+        "⭐ 7) Personalised recommendations\n"
+        "════════════════════════════════════\n"
+        "After you buy games, you can ask for personalised suggestions.\n"
+        "I will:\n"
+        "- Look at your most recent purchased game.\n"
+        "- Use its genre and platform.\n"
+        "- Recommend up to 10 similar games.\n"
+        "\nExample:\n"
+        "- \"recommend a game\"\n"
+
+        "\n════════════════════════════════════\n"
+        "🕵️ 8) Search history\n"
+        "════════════════════════════════════\n"
+        "I can remember what you searched for (without duplicates).\n"
+        "You can ask:\n"
+        "- \"search history\"\n"
+        "\nI will show a numbered list.\n"
+        "You can:\n"
+        "- Type a number to repeat that search.\n"
+        "- Type \"back\" to exit the list.\n"
+        "- Or type anything else to continue normally.\n"
+        "\nTo clear it:\n"
+        "- \"delete search history\"\n"
+
+        "\n════════════════════════════════════\n"
+        "🚪 9) Ending the chat\n"
+        "════════════════════════════════════\n"
+        "- You can say \"bye\" or \"quit\" to end the session.\n"
+        "- If you gave me your name, I may ask whether you want me to save it.\n"
+
+        "\nBot: That's everything! You can start with something simple like:\n"
+        "- \"what games do you have?\"\n"
+        "- \"recommend a game\"\n"
+        "- \"show me action games\"\n"
+        "- \"show me the best game\"\n"
+        f"\nBot: I'm ready when you are, {user_name.value}.\n"
     )
 
 def small_talk() -> str:
@@ -183,6 +271,22 @@ def fallback() -> str:
     return f"Bot: I'm not sure I understand that, {user_name.value}. You can say something like 'what can you do?' to see your options."
 
 # ===== GAME MODE RESPONSES =====
+def recommend_games_personalised(bought_title: str, bought_platform: str, bought_genre: str, rec_titles: List[str]) -> str:
+    lines = [f"- {t} ({bought_platform})" for t in rec_titles]
+
+    return (
+        f"Bot: You previously bought {bought_title} on {bought_platform}, "
+        f"which is in the {bought_genre} genre.\n"
+        f"Here are some {bought_genre} games you might like on {bought_platform}:\n"
+        + "\n".join(lines)
+    )
+
+def no_games_to_recommend(bought_title: str, bought_platform: str, bought_genre: str) -> str:
+    return (
+                f"Bot: You previously bought {bought_title} on {bought_platform} "
+                f"({bought_genre}). I couldn't find new recommendations that you haven't already purchased."
+            )
+    
 def no_game_found():
     return f"Bot: Sorry {user_name.value}, I couldn't find any games that match that. Please try another name or a different filter."
 
@@ -678,19 +782,3 @@ def error_year_not_detected() -> str:
 def error_year_range_not_detected() -> str:
     return f"Bot: I couldn't see two years in your request, {user_name.value}. Try something like 'games released between 2010 and 2015'."
 
-def paged_results(header: str, items: List[str], start_index: int, page_size: int) -> str:
-    end = min(start_index + page_size, len(items))
-    page = items[start_index:end]
-
-    if not page:
-        return "Bot: There's nothing more to show."
-
-    lines = [f"{i+1}. {text}" for i, text in enumerate(page, start=start_index)]
-    msg = "Bot: " + header + "\n" + "\n".join(lines)
-
-    if end < len(items):
-        msg += "\n\nBot: Type 'more' to see more results, or ask something else."
-    return msg
-
-def no_more_results() -> str:
-    return "Bot: No more results to show."

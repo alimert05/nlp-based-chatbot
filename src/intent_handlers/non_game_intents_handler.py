@@ -112,13 +112,21 @@ class IntentHandler:
             - purchase history,
             - or non-game intent handler.
         """
+        # Get intent match
+        label, intent_score, matched_example = self.intent_engine.match(user_input)
+
+        # Get QA engine response
+        answer, qa_score, document, best_idx = self.qa_engine.search(user_input)
+
+        # Extract cleaned-up game query from template
+        game_query = self.games_engine._extract_game_query_from_example(user_input, matched_example or "")
         
         user_input = self._clean_user_input(user_input)
 
-        # If user is selecting from search history (OPTIONAL mode)
+        # If user is selecting from search history 
         if self.waiting_search_history_selection:
             # User explicitly cancels
-            if user_input.lower() == "back":
+            if label == "back":
                 self.waiting_search_history_selection = False
                 return back_from_search_history()
 
@@ -142,19 +150,10 @@ class IntentHandler:
 
             # Anything else: exit mode and continue normally
             self.waiting_search_history_selection = False
-            
-        # Get intent match
-        label, intent_score, matched_example = self.intent_engine.match(user_input)
 
         # Now log if appropriate
         if not self._replay_mode and self._should_log_search(label, user_input):
             save_search_query(user_input)
-
-        # Get QA engine response
-        answer, qa_score, document, best_idx = self.qa_engine.search(user_input)
-
-        # Extract cleaned-up game query from template
-        game_query = self.games_engine._extract_game_query_from_example(user_input, matched_example or "")
 
         # Game mode handling - Check if we're already in game mode
         if self.game_handler.is_game_intent(label):
@@ -555,14 +554,12 @@ class IntentHandler:
 
         if not text or text.isdigit():
             return False
-
-        if label in {"small_talk", "greet", "discover"}:
-            return False
         
         if label in {
             "search_history", "delete_search_history",
             "quit", "back",
-            "confirm_positive", "confirm_negative"
+            "confirm_positive", "confirm_negative",
+            "small_talk", "greet", "discover"
         }:
             return False
 

@@ -871,6 +871,21 @@
     "clear search history",
     "reset search history"
   ]
+}, 
+{
+  "tag": "recommend_game",
+  "examples": [
+    "recommend a game",
+    "recommend me a game",
+    "can you recommend a game",
+    "suggest a game",
+    "suggest me a game",
+    "what should I play next",
+    "give me a recommendation",
+    "recommend something for me",
+    "game recommendation",
+    "recommend games based on what I bought"
+  ]
 }
   ]
 }
