@@ -1,4 +1,5 @@
 import config
+from pathlib import Path
 from typing import Optional
 
 from engines.name_engine import NameRecogniser
@@ -39,7 +40,7 @@ class IntentHandler:
         - small-talk follow-up (positive/negative)
     """
     
-    def __init__(self, intent_path: str = config.INTENTS_PATH) -> None:
+    def __init__(self, intent_path: Path = config.INTENTS_PATH) -> None:
     
         # Confidence thresholds
         self.high_confidence = 0.70
@@ -49,7 +50,7 @@ class IntentHandler:
         self.name_recogniser = NameRecogniser()
         self.qa_engine = QaEngine()
         self.games_engine = GamesEngine()
-        self.intent_engine = IntentEngine()
+        self.intent_engine = IntentEngine(intent_path)
 
         # Dedicated game-mode handler
         self.game_handler = GamesHandler()
@@ -73,8 +74,8 @@ class IntentHandler:
         # Name handling (implicit flow)
         self.name_refused = False # True if user refused to give name earlier
         self.change_name = False # True if user is in simple yes/no name change confirmation
-        self.normalised_name = Optional[str] 
-        self.extracted_name = Optional[str]
+        self.normalised_name: Optional[str] = None
+        self.extracted_name: Optional[str] = None
 
         # Explicit name-change flow
         self.explicit_change_flow = False
@@ -352,7 +353,7 @@ class IntentHandler:
                 self.goodbye_process = False
                 return "no_saved_name_and_end"
 
-            if label == "confirm_positive" or user_input.lower == "yes":
+            if label == "confirm_positive" or user_input.lower() == "yes":
                 save_name_decision(True)
                 self.goodbye_process = False
                 return "save_name_and_end"
@@ -404,6 +405,10 @@ class IntentHandler:
                 return greeting(extracted_name)
             return ask_name_again()
         
+        # Name already known but no name could be extracted from this input
+        if not extracted_name:
+            return ask_name_again()
+
         # Name already known and user repeats the same
         if extracted_name.lower() == str(self.username).lower():
             return name_known()

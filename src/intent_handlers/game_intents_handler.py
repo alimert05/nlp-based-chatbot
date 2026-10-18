@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import Optional
 import random
 from collections import defaultdict
 from engines.games_engine import GamesEngine
@@ -258,6 +258,11 @@ class GamesHandler:
 
         # 2. At platform selection stage
         if self.choose_platform_mode:
+            # Only one game matched, so there is no game list to go back to -> exit buy flow
+            if self.only_one_game:
+                self._reset_buying_state()
+                return back_from_game_selection()
+
             self.choose_platform_mode = False
             self.choose_game_name_mode = True
             self.selected_game_title = None
@@ -478,10 +483,10 @@ class GamesHandler:
             - ask platform (1 game, multiple platforms)
             - or ask which game (multiple titles)
         """
-        self.buying_process = True
-
         if not titles:
             return no_game_found()
+
+        self.buying_process = True
 
         # Group offers by title
         merged_games = defaultdict(list)

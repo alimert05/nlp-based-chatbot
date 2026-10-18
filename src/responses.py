@@ -1,7 +1,7 @@
 from typing import Optional, List, Tuple
 import random
 from collections import defaultdict
-from storage import load_name, save_purchased_game
+from storage import load_name
 
 
 

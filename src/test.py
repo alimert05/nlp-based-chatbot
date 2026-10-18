@@ -1,11 +1,14 @@
 import pandas as pd
 import argparse
+from pathlib import Path
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 
 from engines.intent_engine import IntentEngine
 
+# Default evaluation set, stored next to this script
+DEFAULT_TEST_PATH = Path(__file__).resolve().parent / "intent_test.csv"
 
-def main(path: str):
+def main(path: Path):
     df = pd.read_csv(path)
 
     # Make sure the column exists
@@ -49,6 +52,6 @@ def main(path: str):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--path", default="/Users/alimertkaraoglu/COMP3074_CW/nlp-based-chatbot/src/intent_test.csv")
+    parser.add_argument("--path", type=Path, default=DEFAULT_TEST_PATH)
     args = parser.parse_args()
     main(args.path)

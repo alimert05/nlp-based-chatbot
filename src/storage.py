@@ -1,20 +1,25 @@
-from typing import Optional
+from pathlib import Path
+from typing import Any, Optional, Tuple, List
 from joblib import dump, load
 from config import (USERNAME_PATH, QA_PATH, 
                     GAMES_PATH, USERNAME_DECISION_PATH, 
                     PURCHASED_GAME_PATH, SEARCH_HISTORY_PATH)
-from typing import Optional, Tuple, List
 import pandas as pd
 import sys
 
 PurchasedGame = Tuple[str, str, float]
 
-# User name storage
-def save_name(name: str, path: str = USERNAME_PATH) -> None:
-    """Save the name user's name to disk."""
-    dump(name, path)
+def _dump(value: Any, path: Path) -> None:
+    """Write a value with joblib, creating the parent directory if it does not exist yet."""
+    Path(path).parent.mkdir(parents=True, exist_ok=True)
+    dump(value, path)
 
-def load_name(path: str = USERNAME_PATH) -> Optional[str]:
+# User name storage
+def save_name(name: str, path: Path = USERNAME_PATH) -> None:
+    """Save the user's name to disk."""
+    _dump(name, path)
+
+def load_name(path: Path = USERNAME_PATH) -> Optional[str]:
     """
     Load the stored user name.
     Returns: str or None.
@@ -27,16 +32,16 @@ def load_name(path: str = USERNAME_PATH) -> Optional[str]:
         pass
     return None
 
-def reset_name(path: str = USERNAME_PATH) -> None:
+def reset_name(path: Path = USERNAME_PATH) -> None:
     """Remove the currently saved name."""
-    dump(None, path)
+    _dump(None, path)
 
 # User name saving decision (save name? yes or no)
-def save_name_decision(decision: bool, path: str = USERNAME_DECISION_PATH) -> None:
+def save_name_decision(decision: bool, path: Path = USERNAME_DECISION_PATH) -> None:
     """Store whether the user wants their name to be saved."""
-    dump(decision, path)
+    _dump(decision, path)
 
-def load_name_decision(path: str = USERNAME_DECISION_PATH) -> Optional[bool]:
+def load_name_decision(path: Path = USERNAME_DECISION_PATH) -> Optional[bool]:
     """
     Load the user's name-saving preference.
     Returns: True, False, or None if not stored.
@@ -50,7 +55,7 @@ def load_name_decision(path: str = USERNAME_DECISION_PATH) -> Optional[bool]:
     return None
 
 # Purchased games history
-def load_purchased_games(path: str = PURCHASED_GAME_PATH) -> List[PurchasedGame]:
+def load_purchased_games(path: Path = PURCHASED_GAME_PATH) -> List[PurchasedGame]:
     """
     Load purchase history.
     Returns a list of (title, platform, price).
@@ -86,7 +91,7 @@ def load_purchased_games(path: str = PURCHASED_GAME_PATH) -> List[PurchasedGame]
 
     return []
 
-def save_purchased_game(game_title: str, game_platform: str, game_price: float, path: str = PURCHASED_GAME_PATH, max_history: int = 10) -> None:
+def save_purchased_game(game_title: str, game_platform: str, game_price: float, path: Path = PURCHASED_GAME_PATH, max_history: int = 10) -> None:
     """
     Save purchase into history list.
     Keeps only the last `max_history` purchases.
@@ -97,14 +102,14 @@ def save_purchased_game(game_title: str, game_platform: str, game_price: float, 
     if max_history and max_history > 0:
         history = history[-max_history:]
 
-    dump(history, path)
+    _dump(history, path)
 
-def reset_purchased_games(path: str = PURCHASED_GAME_PATH) -> None:
+def reset_purchased_games(path: Path = PURCHASED_GAME_PATH) -> None:
     """Remove purchase history."""
-    dump([], path)
+    _dump([], path)
 
 # Load QA dataset
-def load_qa_data(path: str = QA_PATH) -> Tuple[List[str], List[str]]:
+def load_qa_data(path: Path = QA_PATH) -> Tuple[List[str], List[str], List[str]]:
     """
     Load the QA dataset from CSV.
     Returns: questions, answers, documents
@@ -122,7 +127,7 @@ def load_qa_data(path: str = QA_PATH) -> Tuple[List[str], List[str]]:
     return questions, answers, documents
 
 # Loads games dataset
-def load_games_data(path: str = GAMES_PATH) -> Tuple[List[str], List[str], List[str], List[str], List[str], List[float], List[str], List[float]]:
+def load_games_data(path: Path = GAMES_PATH) -> Tuple[List[str], List[str], List[str], List[str], List[str], List[float], List[str], List[float]]:
     """
     Load and return the full games dataset.
     Returns: titles, platforms, genres, publishers, developers,
@@ -132,6 +137,7 @@ def load_games_data(path: str = GAMES_PATH) -> Tuple[List[str], List[str], List[
         df = pd.read_csv(path)
     except FileNotFoundError:
         print("[ERROR] Could not find games_data.csv")
+        sys.exit(1)
 
     titles = df["title"].astype(str).tolist()
     platforms = df["console"].astype(str).tolist()
@@ -145,7 +151,7 @@ def load_games_data(path: str = GAMES_PATH) -> Tuple[List[str], List[str], List[
     return titles, platforms, genre, publisher, developer, critic_score, release_date, price
 
 # Search history
-def load_search_history(path: str = SEARCH_HISTORY_PATH) -> List[str]:
+def load_search_history(path: Path = SEARCH_HISTORY_PATH) -> List[str]:
     """Load search history list."""
     try:
         value = load(path)
@@ -157,7 +163,7 @@ def load_search_history(path: str = SEARCH_HISTORY_PATH) -> List[str]:
     return []
 
 
-def save_search_query(query: str, path: str = SEARCH_HISTORY_PATH, max_history: int = 20) -> None:
+def save_search_query(query: str, path: Path = SEARCH_HISTORY_PATH, max_history: int = 20) -> None:
     """
     Append a query to search history ONLY if it's not already present.
     If it exists, don't add a duplicate.
@@ -182,9 +188,9 @@ def save_search_query(query: str, path: str = SEARCH_HISTORY_PATH, max_history: 
     if max_history and max_history > 0:
         history = history[-max_history:]
 
-    dump(history, path)
+    _dump(history, path)
 
 
-def reset_search_history(path: str = SEARCH_HISTORY_PATH) -> None:
+def reset_search_history(path: Path = SEARCH_HISTORY_PATH) -> None:
     """Clear search history."""
-    dump([], path)
+    _dump([], path)

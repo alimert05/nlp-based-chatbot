@@ -205,3 +205,22 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# ---------------------------------------------------------------
+# Project-specific
+# ---------------------------------------------------------------
+
+# Runtime user state written by src/storage.py (name, preferences,
+# search and purchase history). Recreated automatically at runtime.
+data/joblib/*.joblib
+!data/joblib/.gitkeep
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE / editor settings
+.idea/
+.vscode/
+*.swp

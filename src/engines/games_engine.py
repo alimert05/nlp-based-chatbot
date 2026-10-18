@@ -39,7 +39,7 @@ class GamesEngine:
         self.developer_matrix = self.developer_vectoriser.fit_transform(self.developer)
 
     # Title Search
-    def search_by_title(self, user_input: str, min_score: float = 0.4) -> Tuple[List[str], List[str], List[str], List[str], List[str], List[float], List[str], List[float], List[float]]:
+    def search_by_title(self, user_input: str, min_score: float = 0.4) -> Tuple[List[str], List[str], List[str], List[str], List[str], List[float], List[str], List[float]]:
         """
         Search for games based on title similarity.
         Returns all matching attributes for matched titles.
@@ -310,7 +310,7 @@ class GamesEngine:
     
     # Date Filters
     @staticmethod
-    def _extract_year(date_str: str) -> int:
+    def _extract_year(date_str: str) -> Optional[int]:
         """
         Extract the year (first 4 digits) from a YYYY-MM-DD style string.
         """ 
